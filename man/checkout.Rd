@@ -7,11 +7,13 @@
 checkout(repos)
 }
 \arguments{
-\item{repos}{Path to a Git repository}
+\item{repos}{Path to one or more Git repositories.}
 }
 \value{
 Called for its side effect. Returns \code{repos} invisibly.
 }
 \description{
-Checkout the \code{HEAD} of the current Git repository.
+Checkout the \code{main} or \code{master} branch of the given Git repositories. But
+stay on the current reference (e.g. branch) if checking out the repository
+that called \code{checkout()}.
 }

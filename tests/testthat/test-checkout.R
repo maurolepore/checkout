@@ -71,8 +71,7 @@ test_that("with uncommited changes throws an error", {
   expect_error(checkout(repo), "uncommited changes")
 })
 
-test_that("outputs a vector", {
+test_that("returns repos invisibly", {
   repo <- initialize_repo_with_new_file(local_tempdir())
-  out <- checkout(repo)
-  expect_type(out, "character")
+  expect_invisible(checkout(repo))
 })
