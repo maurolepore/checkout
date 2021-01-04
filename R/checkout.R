@@ -1,0 +1,3 @@
+checkout <- function(repos) {
+  repos
+}
