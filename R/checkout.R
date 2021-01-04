@@ -7,7 +7,7 @@
 #' @return Called for its side effect. Returns `repos` invisibly.
 #' @export
 checkout <- function(repos) {
-  checkout_impl(repo = repos)
+  lapply(repos, checkout_impl)
 }
 
 checkout_impl <- function(repo) {
