@@ -18,19 +18,6 @@ test_that("with a non-repo errors gracefully", {
   expect_error(checkout(non_repo), "not.*repo")
 })
 
-test_that("from outside the working directory, checkouts the master branch", {
-  repo <- local_tempdir()
-  git_init(repo)
-  file.create(file.path(repo, "a"))
-  git_add("a", repo = repo)
-  id <- git_commit("New file", repo = repo)
-
-  gert::git_branch_create("pr", checkout = TRUE, repo = repo)
-  checkout(repo)
-
-  expect_equal(git_branch(repo = repo), "master")
-})
-
 test_that("from inside the working directory, checkouts the current branch", {
   repo <- local_tempdir()
   local_dir(repo)
@@ -88,4 +75,30 @@ test_that("checkouts the master branch of a repo and the current branch of
   checkout(c(repo, wd))
   expect_equal(git_branch(repo = repo), "master")
   expect_equal(git_branch(repo = wd), "pr")
+})
+
+test_that("from outside the working directory, checkouts the master branch", {
+  repo <- local_tempdir()
+  git_init(repo)
+  file.create(file.path(repo, "a"))
+  git_add("a", repo = repo)
+  id <- git_commit("New file", repo = repo)
+
+  gert::git_branch_create("pr", checkout = TRUE, repo = repo)
+  checkout(repo)
+
+  expect_equal(git_branch(repo = repo), "master")
+})
+
+test_that("works with the 'main' branch of a repo and prefers it over master", {
+  repo <- local_tempdir()
+  git_init(repo)
+  file.create(file.path(repo, "a"))
+  git_add("a", repo = repo)
+  id <- git_commit("New file", repo = repo)
+
+  gert::git_branch_create("main", checkout = TRUE, repo = repo)
+  checkout(repo)
+
+  expect_equal(git_branch(repo = repo), "main")
 })
