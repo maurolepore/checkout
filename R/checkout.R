@@ -6,8 +6,13 @@
 #'
 #' @return Called for its side effect. Returns `repos` invisibly.
 #' @export
-checkout <- function(repo) {
+checkout <- function(repos) {
+  checkout_impl(repo = repos)
+}
+
+checkout_impl <- function(repo) {
   gert::git_open(repo)
+  stopifnot(length(repo) == 1)
 
   if (repo == getwd()) {
     return(invisible(repo))
