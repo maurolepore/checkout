@@ -45,7 +45,7 @@ git_add(".", repo = repo_a)
 #>         file status staged
 #> 1 a-file.txt    new   TRUE
 git_commit_all("New file", repo = repo_a)
-#> [1] "a0a00a6cfd776e0e24ce4cb41a423b06d04fda4a"
+#> [1] "209309cb613dfcdf064e0ebab87447bf2093cd74"
 
 repo_b <- file.path(tempdir(), "repo_b")
 dir.create(repo_b)
@@ -56,7 +56,7 @@ git_add(".", repo = repo_b)
 #>         file status staged
 #> 1 a-file.txt    new   TRUE
 git_commit_all("New file", repo = repo_b)
-#> [1] "a0a00a6cfd776e0e24ce4cb41a423b06d04fda4a"
+#> [1] "209309cb613dfcdf064e0ebab87447bf2093cd74"
 ```
 
 If we set the directory at `repo_a`, it stays at the branch `pr`,

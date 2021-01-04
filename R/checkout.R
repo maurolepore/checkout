@@ -70,10 +70,10 @@ checkout_impl <- function(repo) {
 }
 
 check_checkout <- function(repo) {
-  git_open(repo)
+  gert::git_open(repo)
   stopifnot(length(repo) == 1)
 
-  has_uncommited_changes <- nrow(git_status(repo = repo)) > 0L
+  has_uncommited_changes <- nrow(gert::git_status(repo = repo)) > 0L
   if (has_uncommited_changes) {
     stop("`repo` must not have uncommited changes: ", repo, call. = FALSE)
   }
@@ -83,8 +83,8 @@ check_checkout <- function(repo) {
 
 checkout_default_branch <- function(repo) {
   tryCatch(
-    git_branch_checkout("main", repo = repo),
-    error = function(e) git_branch_checkout("master", repo = repo)
+    gert::git_branch_checkout("main", repo = repo),
+    error = function(e) gert::git_branch_checkout("master", repo = repo)
   )
 
   invisible(repo)
