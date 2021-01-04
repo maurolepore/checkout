@@ -9,6 +9,11 @@
 checkout <- function(repo) {
   gert::git_open(repo)
 
+  if (repo == getwd()) {
+    return(invisible(repo))
+  }
+
+  # TODO: Extract checkout_default_branch()
   tryCatch(
     gert::git_branch_checkout("main", repo = repo),
     error = function(e) gert::git_branch_checkout("master", repo = repo)

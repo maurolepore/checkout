@@ -30,3 +30,18 @@ test_that("from outside the working directory, checkouts the master branch", {
 
   expect_equal(git_branch(repo = repo), "master")
 })
+
+test_that("from inside the working directory, checkouts the current branch", {
+  repo <- local_tempdir()
+  local_dir(repo)
+
+  git_init(repo)
+  file.create(file.path(repo, "a"))
+  git_add("a", repo = repo)
+  id <- git_commit("New file", repo = repo)
+
+  gert::git_branch_create("pr", checkout = TRUE, repo = repo)
+  checkout(repo)
+
+  expect_equal(git_branch(repo = repo), "pr")
+})
