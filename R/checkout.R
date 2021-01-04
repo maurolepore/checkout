@@ -7,7 +7,8 @@
 #' @return Called for its side effect. Returns `repos` invisibly.
 #' @export
 checkout <- function(repos) {
-  lapply(repos, checkout_impl)
+  out <- lapply(repos, checkout_impl)
+  unlist(out)
 }
 
 checkout_impl <- function(repo) {
