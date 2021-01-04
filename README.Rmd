@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # checkout
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/maurolepore/checkout/workflows/R-CMD-check/badge.svg)](https://github.com/maurolepore/checkout/actions)
 <!-- badges: end -->
 
 The goal of this package is to checkout a set of git repositories in a way
