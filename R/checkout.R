@@ -6,7 +6,13 @@
 #'
 #' @return Called for its side effect. Returns `repos` invisibly.
 #' @export
-checkout <- function(repos) {
-  gert::git_open(repos)
-  invisible(repos)
+checkout <- function(repo) {
+  gert::git_open(repo)
+
+  tryCatch(
+    gert::git_branch_checkout("main", repo = repo),
+    error = function(e) gert::git_branch_checkout("master", repo = repo)
+  )
+
+  invisible(repo)
 }
