@@ -1,5 +1,5 @@
 Package: checkout
-Title: What the Package Does (One Line, Title Case)
+Title: Checkout a Family of Git Repositories
 Version: 0.0.0.9000
 Authors@R: 
     c(person(given = "Mauro",
@@ -10,8 +10,12 @@ Authors@R:
       person(given = "2 Degrees Investing Initiative",
              role = c("cph", "fnd"),
              email = "contact@2degrees-investing.org"))
-Description: For more information visit
-    <https://2degrees-investing.org/>.
+Description: The goal of this package is to checkout a set of
+    git repositories in a way similar to
+    <https://github.com/actions/checkout>, to reproduce locally what you
+    may usually do in GitHub actions. It is most useful to test locally
+    the latest commit of the working directory in the context of the
+    master branch of one or multiple other repositories.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
