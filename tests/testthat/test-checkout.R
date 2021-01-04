@@ -2,7 +2,6 @@ library(gert)
 library(withr)
 
 test_that("with the working repo leaves the repo at the HEAD", {
-  stopifnot(user_is_configured())
   repo <- local_tempdir()
   local_dir(repo)
   git_init(repo)
