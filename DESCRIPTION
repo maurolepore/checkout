@@ -25,7 +25,8 @@ URL: https://github.com/maurolepore/checkout
 BugReports: https://github.com/maurolepore/checkout/issues
 Imports: 
     family,
-    gert
+    gert,
+    withr
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

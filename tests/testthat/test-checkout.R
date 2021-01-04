@@ -1,10 +1,9 @@
 library(gert)
 
 test_that("with the current working directory does nothing", {
-  oldwd <- getwd()
-  repo <- file.path(tempdir(), "myrepo")
+  repo <- withr::local_tempdir()
+  withr::local_dir(repo)
   git_init(repo)
-  setwd(repo)
 
   # Set a user if no default
   if (!user_is_configured()) {
@@ -20,10 +19,4 @@ test_that("with the current working directory does nothing", {
 
   checkout(repo)
   expect_equal(gert::git_commit_id(repo = repo), id)
-
-
-
-  # cleanup
-  setwd(oldwd)
-  unlink(repo, recursive = TRUE)
-  })
+})
