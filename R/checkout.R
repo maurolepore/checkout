@@ -8,6 +8,49 @@
 #'
 #' @return Called for its side effect. Returns `repos` invisibly.
 #' @export
+#' @examples
+#' library(checkout)
+#' library(gert)
+#'
+#' # Setup two minimal repositories.
+#'
+#' repo_a <- file.path(tempdir(), "repo_a")
+#' dir.create(repo_a)
+#' file.create(file.path(repo_a, "a-file.txt"))
+#' git_init(repo_a)
+#' git_add(".", repo = repo_a)
+#' git_commit_all("New file", repo = repo_a)
+#'
+#' repo_b <- file.path(tempdir(), "repo_b")
+#' dir.create(repo_b)
+#' file.create(file.path(repo_b, "a-file.txt"))
+#' git_init(repo_b)
+#' git_add(".", repo = repo_b)
+#' git_commit_all("New file", repo = repo_b)
+#'
+#' # If we set the directory at `repo_a`, it stays at the branch `pr`, whereas the
+#' # `repo_b` changes to the branch `master` (or `main`).
+#'
+#' oldwd <- getwd()
+#' setwd(repo_a)
+#'
+#' git_branch_create("pr", checkout = TRUE, repo = repo_a)
+#' git_branch_create("pr", checkout = TRUE, repo = repo_b)
+#'
+#' # Before
+#' git_branch(repo_a)
+#' git_branch(repo_b)
+#'
+#' checkout(c(repo_a, repo_b))
+#'
+#' # After
+#' git_branch(repo_a)
+#' git_branch(repo_b)
+#'
+#' # Cleanup
+#' unlink(repo_a)
+#' unlink(repo_b)
+#' setwd(oldwd)
 checkout <- function(repos) {
   unlist(lapply(repos, checkout_impl))
 
@@ -27,10 +70,10 @@ checkout_impl <- function(repo) {
 }
 
 check_checkout <- function(repo) {
-  gert::git_open(repo)
+  git_open(repo)
   stopifnot(length(repo) == 1)
 
-  has_uncommited_changes <- nrow(gert::git_status(repo = repo)) > 0L
+  has_uncommited_changes <- nrow(git_status(repo = repo)) > 0L
   if (has_uncommited_changes) {
     stop("`repo` must not have uncommited changes: ", repo, call. = FALSE)
   }
@@ -40,8 +83,8 @@ check_checkout <- function(repo) {
 
 checkout_default_branch <- function(repo) {
   tryCatch(
-    gert::git_branch_checkout("main", repo = repo),
-    error = function(e) gert::git_branch_checkout("master", repo = repo)
+    git_branch_checkout("main", repo = repo),
+    error = function(e) git_branch_checkout("master", repo = repo)
   )
 
   invisible(repo)

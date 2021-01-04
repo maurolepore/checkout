@@ -17,3 +17,47 @@ Checkout the \code{main} or \code{master} branch of the given Git repositories. 
 stay on the current reference (e.g. branch) if checking out the repository
 that called \code{checkout()}.
 }
+\examples{
+library(checkout)
+library(gert)
+
+# Setup two minimal repositories.
+
+repo_a <- file.path(tempdir(), "repo_a")
+dir.create(repo_a)
+file.create(file.path(repo_a, "a-file.txt"))
+git_init(repo_a)
+git_add(".", repo = repo_a)
+git_commit_all("New file", repo = repo_a)
+
+repo_b <- file.path(tempdir(), "repo_b")
+dir.create(repo_b)
+file.create(file.path(repo_b, "a-file.txt"))
+git_init(repo_b)
+git_add(".", repo = repo_b)
+git_commit_all("New file", repo = repo_b)
+
+# If we set the directory at `repo_a`, it stays at the branch `pr`, whereas the
+# `repo_b` changes to the branch `master` (or `main`).
+
+oldwd <- getwd()
+setwd(repo_a)
+
+git_branch_create("pr", checkout = TRUE, repo = repo_a)
+git_branch_create("pr", checkout = TRUE, repo = repo_b)
+
+# Before
+git_branch(repo_a)
+git_branch(repo_b)
+
+checkout(c(repo_a, repo_b))
+
+# After
+git_branch(repo_a)
+git_branch(repo_b)
+
+# Cleanup
+unlink(repo_a)
+unlink(repo_b)
+setwd(oldwd)
+}
