@@ -9,8 +9,8 @@ test_that("with the working repo leaves the repo at the HEAD", {
 
   file.create("a")
   git_add("a")
-  id <- git_commit("New file")
 
+  id <- git_commit("New file")
   checkout(repo)
   expect_equal(git_commit_id(ref = "HEAD", repo = repo), id)
 })

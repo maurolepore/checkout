@@ -1,3 +1,3 @@
 checkout <- function(repos) {
-  repos
+  invisible(repos)
 }
