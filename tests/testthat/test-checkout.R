@@ -64,3 +64,9 @@ test_that("works with the 'main' branch of a repo and prefers it over master", {
   checkout(repo)
   expect_equal(git_branch(repo = repo), "main")
 })
+
+test_that("with uncommited changes throws an error", {
+  repo <- initialize_repo_with_new_file(local_tempdir())
+  writeLines("change but don't commit", file.path(repo, "a"))
+  expect_error(checkout(repo), "uncommited changes")
+})
