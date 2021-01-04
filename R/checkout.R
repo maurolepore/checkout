@@ -12,22 +12,29 @@ checkout <- function(repos) {
 }
 
 checkout_impl <- function(repo) {
+  check_checkout(repo)
+
+  if (repo == getwd()) {
+    return(invisible(repo))
+  } else {
+    checkout_default_branch(repo)
+  }
+
+  invisible(repo)
+}
+
+check_checkout <- function(repo) {
   gert::git_open(repo)
   stopifnot(length(repo) == 1)
   has_uncommited_changes <- nrow(gert::git_status(repo = repo)) > 0L
   if (has_uncommited_changes) {
     stop("`repo` must not have uncommited changes: ", repo, call. = FALSE)
   }
+}
 
-  if (repo == getwd()) {
-    return(invisible(repo))
-  }
-
-  # TODO: Extract checkout_default_branch()
+checkout_default_branch <- function(repo) {
   tryCatch(
     gert::git_branch_checkout("main", repo = repo),
     error = function(e) gert::git_branch_checkout("master", repo = repo)
   )
-
-  invisible(repo)
 }
