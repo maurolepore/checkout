@@ -7,5 +7,6 @@
 #' @return Called for its side effect. Returns `repos` invisibly.
 #' @export
 checkout <- function(repos) {
+  gert::git_open(repos)
   invisible(repos)
 }
