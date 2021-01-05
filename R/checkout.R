@@ -13,8 +13,8 @@
 #' library(gert)
 #'
 #' if (!user_is_configured()) {
-#'   git_config_set("user.name", "Jerry")
-#'   git_config_set("user.email", "jerry@gmail.com")
+#'   system("git config user.name Jerry")
+#'   system("git config user.email jerry@gmail.com")
 #' }
 #'
 #' # Setup two minimal repositories.
