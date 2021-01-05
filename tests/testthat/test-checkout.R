@@ -1,13 +1,11 @@
 library(gert)
 library(withr)
 
-if (!user_is_configured()) {
-  git_config_global_set("user.name", "Mauro Lepore")
-  git_config_set("user.email", "maurolepore@gmail.com")
-}
-
 initialize_repo_with_new_file <- function(path) {
   repo <- git_init(path)
+  git_config_set("user.name", "Jerry", repo = repo)
+  git_config_set("user.email", "jerry@gmail.com", repo = repo)
+
   file.create(file.path(repo, "a"))
   git_add("a", repo = repo)
   git_commit("New file", repo = repo)
