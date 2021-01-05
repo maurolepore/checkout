@@ -7,7 +7,7 @@ initialize_repo_with_new_file <- function(path) {
   git_config_set("user.email", "jerry@gmail.com", repo = repo)
 
   file.create(file.path(repo, "a"))
-  git_add("a", repo = repo)
+  git_add(".", repo = repo)
   git_commit("New file", repo = repo)
 
   invisible(path)
@@ -19,12 +19,18 @@ test_that("with a non-repo errors gracefully", {
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
-  repo <- initialize_repo_with_new_file(local_tempdir())
-  local_dir(repo)
+  repo <- initialize_repo_with_new_file(tempdir())
+
+  oldwd <- getwd()
+  setwd(repo)
+  on.exit(setwd(oldwd), add = TRUE)
+
   gert::git_branch_create("pr", checkout = TRUE, repo = repo)
 
   checkout(repo)
   expect_equal(git_branch(repo = repo), "pr")
+
+  setwd(oldwd)
 })
 
 test_that("checkouts the master branch of multiple repos", {
@@ -40,16 +46,22 @@ test_that("checkouts the master branch of multiple repos", {
 
 test_that("checkouts the master branch of a repo and the current branch of
           the current working directory", {
-  repo <- initialize_repo_with_new_file(local_tempdir())
+  repo <- initialize_repo_with_new_file(file.path(tempdir(), "repo"))
   gert::git_branch_create("pr", checkout = TRUE, repo = repo)
 
-  wd <- initialize_repo_with_new_file(local_tempdir())
-  local_dir(wd)
+  wd <- initialize_repo_with_new_file(file.path(tempdir(), "wd"))
+
+  oldwd <- getwd()
+  setwd(wd)
+  on.exit(setwd(oldwd), add = TRUE)
+
   gert::git_branch_create("pr", checkout = TRUE, repo = wd)
 
   checkout(c(repo, wd))
   expect_equal(git_branch(repo = repo), "master")
   expect_equal(git_branch(repo = wd), "pr")
+
+  setwd(oldwd)
 })
 
 test_that("from outside the working directory, checkouts the master branch", {

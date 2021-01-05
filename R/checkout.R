@@ -61,6 +61,7 @@ checkout <- function(repos) {
 }
 
 checkout_impl <- function(repo) {
+  browser()
   check_checkout(repo)
 
   if (repo == getwd()) {
