@@ -2,8 +2,8 @@ library(gert)
 library(withr)
 
 if (!user_is_configured()) {
-  git_config_set("user.name", "Jerry")
-  git_config_set("user.email", "jerry@gmail.com")
+  git_config_global_set("user.name", "Mauro Lepore")
+  git_config_set("user.email", "maurolepore@gmail.com")
 }
 
 initialize_repo_with_new_file <- function(path) {
