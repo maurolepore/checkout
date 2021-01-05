@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/maurolepore/checkout/workflows/R-CMD-check/badge.svg)](https://github.com/maurolepore/checkout/actions)
 [![Codecov test coverage](https://codecov.io/gh/maurolepore/checkout/branch/main/graph/badge.svg)](https://codecov.io/gh/maurolepore/checkout?branch=main)
+[![CRAN status](https://www.r-pkg.org/badges/version/checkout)](https://CRAN.R-project.org/package=checkout)
 <!-- badges: end -->
 
 The goal of this package is to checkout a set of git repositories in a way
@@ -67,18 +68,18 @@ If we set the directory at `repo_a`, it stays at the branch `pr`, whereas the `r
 ```{r}
 setwd(repo_a)
 
-gert::git_branch_create("pr", checkout = TRUE, repo = repo_a)
-gert::git_branch_create("pr", checkout = TRUE, repo = repo_b)
+git_branch_create("pr", checkout = TRUE, repo = repo_a)
+git_branch_create("pr", checkout = TRUE, repo = repo_b)
 
 # Before
-gert::git_branch(repo_a)
-gert::git_branch(repo_b)
+git_branch(repo_a)
+git_branch(repo_b)
 
 checkout(c(repo_a, repo_b))
 
 # After
-gert::git_branch(repo_a)
-gert::git_branch(repo_b)
+git_branch(repo_a)
+git_branch(repo_b)
 ```
 
 This behaviour is inspired by the `ref` argument of <https://github.com/actions/checkout> and helps work locally in a way similar to GitHub actions.
