@@ -25,7 +25,7 @@ test_that("from inside the working directory, checkouts the current branch", {
   setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
 
-  gert::git_branch_create("pr", checkout = TRUE, repo = repo)
+  git_branch_create("pr", checkout = TRUE, repo = repo)
 
   checkout(repo)
   expect_equal(git_branch(repo = repo), "pr")
@@ -35,9 +35,9 @@ test_that("from inside the working directory, checkouts the current branch", {
 
 test_that("checkouts the master branch of multiple repos", {
   repo1 <- initialize_repo_with_new_file(local_tempdir())
-  gert::git_branch_create("pr", checkout = TRUE, repo = repo1)
+  git_branch_create("pr", checkout = TRUE, repo = repo1)
   repo2 <- initialize_repo_with_new_file(local_tempdir())
-  gert::git_branch_create("pr", checkout = TRUE, repo = repo2)
+  git_branch_create("pr", checkout = TRUE, repo = repo2)
 
   checkout(c(repo1, repo2))
   expect_equal(git_branch(repo = repo1), "master")
@@ -47,7 +47,7 @@ test_that("checkouts the master branch of multiple repos", {
 test_that("checkouts the master branch of a repo and the current branch of
           the current working directory", {
   repo <- initialize_repo_with_new_file(file.path(tempdir(), "repo"))
-  gert::git_branch_create("pr", checkout = TRUE, repo = repo)
+  git_branch_create("pr", checkout = TRUE, repo = repo)
 
   wd <- initialize_repo_with_new_file(file.path(tempdir(), "wd"))
 
@@ -55,7 +55,7 @@ test_that("checkouts the master branch of a repo and the current branch of
   setwd(wd)
   on.exit(setwd(oldwd), add = TRUE)
 
-  gert::git_branch_create("pr", checkout = TRUE, repo = wd)
+  git_branch_create("pr", checkout = TRUE, repo = wd)
 
   checkout(c(repo, wd))
   expect_equal(git_branch(repo = repo), "master")
@@ -66,7 +66,7 @@ test_that("checkouts the master branch of a repo and the current branch of
 
 test_that("from outside the working directory, checkouts the master branch", {
   repo <- initialize_repo_with_new_file(local_tempdir())
-  gert::git_branch_create("pr", checkout = TRUE, repo = repo)
+  git_branch_create("pr", checkout = TRUE, repo = repo)
 
   checkout(repo)
   expect_equal(git_branch(repo = repo), "master")
@@ -74,7 +74,7 @@ test_that("from outside the working directory, checkouts the master branch", {
 
 test_that("works with the 'main' branch of a repo and prefers it over master", {
   repo <- initialize_repo_with_new_file(local_tempdir())
-  gert::git_branch_create("main", checkout = TRUE, repo = repo)
+  git_branch_create("main", checkout = TRUE, repo = repo)
 
   checkout(repo)
   expect_equal(git_branch(repo = repo), "main")
