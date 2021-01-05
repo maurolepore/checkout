@@ -12,6 +12,11 @@
 #' library(checkout)
 #' library(gert)
 #'
+#' if(!user_is_configured()){
+#'   git_config_set("user.name", "Jerry")
+#'   git_config_set("user.email", "jerry@gmail.com")
+#' }
+#'
 #' # Setup two minimal repositories.
 #'
 #' repo_a <- file.path(tempdir(), "repo_a")
