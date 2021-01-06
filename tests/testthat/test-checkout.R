@@ -1,6 +1,3 @@
-library(gert)
-library(withr)
-
 test_that("with a non-repo errors gracefully", {
   non_repo <- temp_dir()
   on.exit(unlink(non_repo, recursive = TRUE), add = TRUE)
