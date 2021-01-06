@@ -10,8 +10,8 @@ new_repo <- function(path) {
   invisible(path)
 }
 
-temp_dir <- function() {
-  path <- file.path(tempdir(), "temp_dir")
+temp_dir <- function(name = "temp_dir") {
+  path <- file.path(tempdir(), name)
   if (dir.exists(path)) unlink(path, recursive = TRUE)
   dir.create(path)
 

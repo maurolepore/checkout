@@ -41,18 +41,17 @@ test_that("checkouts the master branch of multiple repos", {
 
 test_that("checkouts the master branch of a repo and the current branch of
           the current working directory", {
-  path <- new_repo(file.path(tempdir(), "repo"))
+  path <- new_repo(temp_dir("repo1"))
   git_branch_create("pr", checkout = TRUE, repo = path)
 
-  wd <- new_repo(file.path(tempdir(), "wd"))
+  wd <- new_repo(temp_dir("repo2"))
+  git_branch_create("pr", checkout = TRUE, repo = wd)
 
   oldwd <- getwd()
   setwd(wd)
   on.exit(setwd(oldwd), add = TRUE)
-
-  git_branch_create("pr", checkout = TRUE, repo = wd)
-
   checkout(c(path, wd))
+
   expect_equal(git_branch(repo = path), "master")
   expect_equal(git_branch(repo = wd), "pr")
 
@@ -68,7 +67,8 @@ test_that("from outside the working directory, checkouts the master branch", {
 })
 
 test_that("works with the 'main' branch of a repo and prefers it over master", {
-  path <- new_repo(local_tempdir())
+  path <- new_repo(temp_dir())
+  on.exit(unlink(path, recursive = TRUE), add = TRUE)
   git_branch_create("main", checkout = TRUE, repo = path)
 
   checkout(path)
@@ -76,13 +76,16 @@ test_that("works with the 'main' branch of a repo and prefers it over master", {
 })
 
 test_that("with uncommited changes throws an error", {
-  path <- new_repo(local_tempdir())
+  path <- new_repo(temp_dir())
+  on.exit(unlink(path, recursive = TRUE), add = TRUE)
   writeLines("change but don't commit", file.path(path, "a"))
   expect_error(checkout(path), "uncommited changes")
 })
 
 test_that("returns repos invisibly", {
-  path <- new_repo(local_tempdir())
+  path <- new_repo(temp_dir())
+  on.exit(unlink(path, recursive = TRUE), add = TRUE)
+
   expect_invisible(checkout(path))
 })
 
