@@ -13,12 +13,11 @@
 #' library(gert)
 #'
 #' # Setup two minimal repositories.
+#'
 #' repo_a <- file.path(tempdir(), "repo_a")
 #' dir.create(repo_a)
 #' file.create(file.path(repo_a, "a-file.txt"))
 #' git_init(repo_a)
-#' git_config_set("user.name", "Jerry", repo = repo_a)
-#' git_config_set("user.email", "jerry@gmail.com", repo = repo_a)
 #' git_add(".", repo = repo_a)
 #' git_commit_all("New file", repo = repo_a)
 #'
@@ -26,8 +25,6 @@
 #' dir.create(repo_b)
 #' file.create(file.path(repo_b, "a-file.txt"))
 #' git_init(repo_b)
-#' git_config_set("user.name", "Jerry", repo = repo_b)
-#' git_config_set("user.email", "jerry@gmail.com", repo = repo_b)
 #' git_add(".", repo = repo_b)
 #' git_commit_all("New file", repo = repo_b)
 #'
@@ -51,18 +48,19 @@
 #' git_branch(repo_b)
 #'
 #' # Cleanup
+#' unlink(repo_a)
+#' unlink(repo_b)
 #' setwd(oldwd)
-#' unlink(repo_a, recursive = TRUE)
-#' unlink(repo_b, recursive = TRUE)
 checkout <- function(repos) {
-  unlist(lapply(repos, checkout_repo))
+  unlist(lapply(repos, checkout_impl))
+
   invisible(repos)
 }
 
-checkout_repo <- function(repo) {
+checkout_impl <- function(repo) {
   check_checkout(repo)
 
-  if (file_path(repo) == file_path(getwd())) {
+  if (repo == getwd()) {
     return(invisible(repo))
   } else {
     checkout_default_branch(repo)
@@ -72,31 +70,21 @@ checkout_repo <- function(repo) {
 }
 
 check_checkout <- function(repo) {
+  gert::git_open(repo)
   stopifnot(length(repo) == 1)
-  git_open(repo)
 
-  if (has_uncommited_changes(repo)) {
+  has_uncommited_changes <- nrow(gert::git_status(repo = repo)) > 0L
+  if (has_uncommited_changes) {
     stop("`repo` must not have uncommited changes: ", repo, call. = FALSE)
   }
 
   invisible(repo)
 }
 
-has_uncommited_changes <- function(repo) {
-  nrow(git_status(repo = repo)) > 0L
-}
-
-file_path <- function(path) {
-  remake_path <- function(x) file.path(dirname(x), basename(x))
-  unlist(lapply(path, remake_path))
-}
-
 checkout_default_branch <- function(repo) {
   tryCatch(
-    git_branch_checkout("main", repo = repo),
-    error = function(e) {
-      git_branch_checkout("master", repo = repo)
-    }
+    gert::git_branch_checkout("main", repo = repo),
+    error = function(e) gert::git_branch_checkout("master", repo = repo)
   )
 
   invisible(repo)

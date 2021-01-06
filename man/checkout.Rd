@@ -22,12 +22,11 @@ library(checkout)
 library(gert)
 
 # Setup two minimal repositories.
+
 repo_a <- file.path(tempdir(), "repo_a")
 dir.create(repo_a)
 file.create(file.path(repo_a, "a-file.txt"))
 git_init(repo_a)
-git_config_set("user.name", "Jerry", repo = repo_a)
-git_config_set("user.email", "jerry@gmail.com", repo = repo_a)
 git_add(".", repo = repo_a)
 git_commit_all("New file", repo = repo_a)
 
@@ -35,8 +34,6 @@ repo_b <- file.path(tempdir(), "repo_b")
 dir.create(repo_b)
 file.create(file.path(repo_b, "a-file.txt"))
 git_init(repo_b)
-git_config_set("user.name", "Jerry", repo = repo_b)
-git_config_set("user.email", "jerry@gmail.com", repo = repo_b)
 git_add(".", repo = repo_b)
 git_commit_all("New file", repo = repo_b)
 
@@ -60,7 +57,7 @@ git_branch(repo_a)
 git_branch(repo_b)
 
 # Cleanup
+unlink(repo_a)
+unlink(repo_b)
 setwd(oldwd)
-unlink(repo_a, recursive = TRUE)
-unlink(repo_b, recursive = TRUE)
 }
