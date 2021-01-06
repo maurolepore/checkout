@@ -25,7 +25,8 @@ test_that("from inside the working directory, checkouts the current branch", {
   setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
 
-  git_branch_create("pr", checkout = TRUE, repo = repo)
+  git_branch_create("pr", repo = repo)
+  git_branch_checkout("pr", repo = repo)
 
   checkout(repo)
   expect_equal(git_branch(repo = repo), "pr")
