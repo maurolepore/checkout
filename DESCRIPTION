@@ -24,8 +24,7 @@ RoxygenNote: 7.1.1
 URL: https://github.com/maurolepore/checkout
 BugReports: https://github.com/maurolepore/checkout/issues
 Imports: 
-    gert,
-    withr
+    gert
 Suggests: 
     testthat (>= 3.0.0),
     covr
