@@ -2,12 +2,14 @@ library(gert)
 library(withr)
 
 test_that("with a non-repo errors gracefully", {
-  non_repo <- local_tempdir()
+  non_repo <- temp_dir()
+  on.exit(unlink(non_repo, recursive = TRUE))
+
   expect_error(checkout(non_repo), "not.*repo")
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
-  path <- initialize_repo_with_new_file(temp_repo())
+  path <- initialize_repo_with_new_file(temp_dir())
   on.exit(unlink(path, recursive = TRUE))
 
   git_branch_create("pr", repo = path)

@@ -1,7 +1,4 @@
 initialize_repo_with_new_file <- function(path) {
-  if (dir.exists(path)) unlink(path, recursive = TRUE)
-  dir.create(path)
-
   path <- git_init(path)
   git_config_set("user.name", "jerry", repo = path)
   git_config_set("user.email", "jerry@gmail.com", repo = path)
@@ -13,6 +10,10 @@ initialize_repo_with_new_file <- function(path) {
   invisible(path)
 }
 
-temp_repo <- function() {
-  file.path(tempdir(), "repo")
+temp_dir <- function() {
+  path <- file.path(tempdir(), "temp_dir")
+  if (dir.exists(path)) unlink(path, recursive = TRUE)
+  dir.create(path)
+
+  invisible(path)
 }
