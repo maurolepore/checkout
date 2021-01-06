@@ -87,13 +87,16 @@ has_uncommited_changes <- function(repo) {
 }
 
 file_path <- function(path) {
-  unlist(lapply(path, function(x) file.path(dirname(x), basename(x))))
+  remake_path <- function(x) file.path(dirname(x), basename(x))
+  unlist(lapply(path, remake_path))
 }
 
 checkout_default_branch <- function(repo) {
   tryCatch(
     git_branch_checkout("main", repo = repo),
-    error = function(e) git_branch_checkout("master", repo = repo)
+    error = function(e) {
+      git_branch_checkout("master", repo = repo)
+    }
   )
 
   invisible(repo)
