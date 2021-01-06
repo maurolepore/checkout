@@ -56,7 +56,8 @@ test_that("checkouts the master branch of a repo and the current branch of
 })
 
 test_that("from outside the working directory, checkouts the master branch", {
-  path <- new_repo(local_tempdir())
+  path <- new_repo(temp_dir())
+  on.exit(unlink(path, recursive = TRUE), add = TRUE)
   git_branch_create("pr", checkout = TRUE, repo = path)
 
   checkout(path)
