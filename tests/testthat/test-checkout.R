@@ -1,13 +1,13 @@
 test_that("with a non-repo errors gracefully", {
   non_repo <- temp_dir()
-  on.exit(unlink(non_repo, recursive = TRUE), add = TRUE)
+  on.exit(destroy(non_repo), add = TRUE)
 
   expect_error(checkout(non_repo), "not.*repo")
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
   path <- new_repo(temp_dir())
-  on.exit(unlink(path, recursive = TRUE), add = TRUE)
+  on.exit(destroy(path), add = TRUE)
 
   git_branch_create("pr", repo = path)
   git_branch_checkout("pr", repo = path)
@@ -24,11 +24,11 @@ test_that("from inside the working directory, checkouts the current branch", {
 
 test_that("checkouts the master branch of multiple repos", {
   repo1 <- new_repo(temp_dir())
-  on.exit(unlink(repo1, recursive = TRUE), add = TRUE)
+  on.exit(destroy(repo1), add = TRUE)
   git_branch_create("pr", checkout = TRUE, repo = repo1)
 
   repo2 <- new_repo(temp_dir())
-  on.exit(unlink(repo2, recursive = TRUE), add = TRUE)
+  on.exit(destroy(repo2), add = TRUE)
   git_branch_create("pr", checkout = TRUE, repo = repo2)
 
   checkout(c(repo1, repo2))
@@ -57,7 +57,6 @@ test_that("checkouts the master branch of a repo and the current branch of
 
 test_that("from outside the working directory, checkouts the master branch", {
   path <- new_repo(temp_dir())
-  on.exit(unlink(path, recursive = TRUE), add = TRUE)
   git_branch_create("pr", checkout = TRUE, repo = path)
 
   checkout(path)
@@ -66,7 +65,7 @@ test_that("from outside the working directory, checkouts the master branch", {
 
 test_that("works with the 'main' branch of a repo and prefers it over master", {
   path <- new_repo(temp_dir())
-  on.exit(unlink(path, recursive = TRUE), add = TRUE)
+  on.exit(destroy(path), add = TRUE)
   git_branch_create("main", checkout = TRUE, repo = path)
 
   checkout(path)
@@ -75,14 +74,14 @@ test_that("works with the 'main' branch of a repo and prefers it over master", {
 
 test_that("with uncommited changes throws an error", {
   path <- new_repo(temp_dir())
-  on.exit(unlink(path, recursive = TRUE), add = TRUE)
+  on.exit(destroy(path), add = TRUE)
   writeLines("change but don't commit", file.path(path, "a"))
   expect_error(checkout(path), "uncommited changes")
 })
 
 test_that("returns repos invisibly", {
   path <- new_repo(temp_dir())
-  on.exit(unlink(path, recursive = TRUE), add = TRUE)
+  on.exit(destroy(path), add = TRUE)
 
   expect_invisible(checkout(path))
 })

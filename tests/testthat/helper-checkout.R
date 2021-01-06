@@ -17,3 +17,7 @@ temp_dir <- function(name = "temp_dir") {
 
   invisible(path)
 }
+
+destroy <- function(path) {
+  unlink(path, recursive = TRUE)
+}

@@ -60,7 +60,7 @@ git_branch(repo_a)
 git_branch(repo_b)
 
 # Cleanup
-unlink(repo_a)
-unlink(repo_b)
 setwd(oldwd)
+unlink(repo_a, recursive = TRUE)
+unlink(repo_b, recursive = TRUE)
 }
