@@ -63,7 +63,8 @@ checkout <- function(repos) {
 checkout_impl <- function(repo) {
   check_checkout(repo)
 
-  if (repo == getwd()) {
+  repo_is_wd <- normalizePath(repo) == normalizePath(getwd())
+  if (repo_is_wd) {
     return(invisible(repo))
   } else {
     checkout_default_branch(repo)

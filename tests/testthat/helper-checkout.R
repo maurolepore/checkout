@@ -1,10 +1,12 @@
 initialize_repo_with_new_file <- function(path) {
-  if (!dir.exists(path)) dir.create(path)
-  repo <- git_init(path)
+  if (dir.exists(path)) unlink(path, recursive = TRUE)
+  dir.create(path)
 
-  file.create(file.path(repo, "a"))
-  git_add(".", repo = repo)
-  git_commit("New file", repo = repo)
+  path <- git_init(path)
+
+  file.create(file.path(path, "a"))
+  git_add(".", repo = path)
+  git_commit("New file", repo = path)
 
   invisible(path)
 }

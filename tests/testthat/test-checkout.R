@@ -7,17 +7,18 @@ test_that("with a non-repo errors gracefully", {
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
-  repo <- initialize_repo_with_new_file(temp_repo())
-  on.exit(unlink(repo, recursive = TRUE))
+  path <- initialize_repo_with_new_file(temp_repo())
+  on.exit(unlink(path, recursive = TRUE))
+
+  git_branch_create("pr", repo = path)
+  git_branch_checkout("pr", repo = path)
+
   oldwd <- getwd()
-  setwd(repo)
+  setwd(path)
   on.exit(setwd(oldwd), add = TRUE)
-
-  git_branch_create("pr", repo = repo)
-  git_branch_checkout("pr", repo = repo)
-
-  checkout(repo)
-  expect_equal(git_branch(repo = repo), "pr")
+  getwd()
+  checkout(path)
+  expect_equal(git_branch(repo = path), "pr")
 
   setwd(oldwd)
 })
@@ -35,8 +36,8 @@ test_that("checkouts the master branch of multiple repos", {
 
 test_that("checkouts the master branch of a repo and the current branch of
           the current working directory", {
-  repo <- initialize_repo_with_new_file(file.path(tempdir(), "repo"))
-  git_branch_create("pr", checkout = TRUE, repo = repo)
+  path <- initialize_repo_with_new_file(file.path(tempdir(), "repo"))
+  git_branch_create("pr", checkout = TRUE, repo = path)
 
   wd <- initialize_repo_with_new_file(file.path(tempdir(), "wd"))
 
@@ -46,37 +47,37 @@ test_that("checkouts the master branch of a repo and the current branch of
 
   git_branch_create("pr", checkout = TRUE, repo = wd)
 
-  checkout(c(repo, wd))
-  expect_equal(git_branch(repo = repo), "master")
+  checkout(c(path, wd))
+  expect_equal(git_branch(repo = path), "master")
   expect_equal(git_branch(repo = wd), "pr")
 
   setwd(oldwd)
 })
 
 test_that("from outside the working directory, checkouts the master branch", {
-  repo <- initialize_repo_with_new_file(local_tempdir())
-  git_branch_create("pr", checkout = TRUE, repo = repo)
+  path <- initialize_repo_with_new_file(local_tempdir())
+  git_branch_create("pr", checkout = TRUE, repo = path)
 
-  checkout(repo)
-  expect_equal(git_branch(repo = repo), "master")
+  checkout(path)
+  expect_equal(git_branch(repo = path), "master")
 })
 
 test_that("works with the 'main' branch of a repo and prefers it over master", {
-  repo <- initialize_repo_with_new_file(local_tempdir())
-  git_branch_create("main", checkout = TRUE, repo = repo)
+  path <- initialize_repo_with_new_file(local_tempdir())
+  git_branch_create("main", checkout = TRUE, repo = path)
 
-  checkout(repo)
-  expect_equal(git_branch(repo = repo), "main")
+  checkout(path)
+  expect_equal(git_branch(repo = path), "main")
 })
 
 test_that("with uncommited changes throws an error", {
-  repo <- initialize_repo_with_new_file(local_tempdir())
-  writeLines("change but don't commit", file.path(repo, "a"))
-  expect_error(checkout(repo), "uncommited changes")
+  path <- initialize_repo_with_new_file(local_tempdir())
+  writeLines("change but don't commit", file.path(path, "a"))
+  expect_error(checkout(path), "uncommited changes")
 })
 
 test_that("returns repos invisibly", {
-  repo <- initialize_repo_with_new_file(local_tempdir())
-  expect_invisible(checkout(repo))
+  path <- initialize_repo_with_new_file(local_tempdir())
+  expect_invisible(checkout(path))
 })
 
