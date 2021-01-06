@@ -75,12 +75,15 @@ check_checkout <- function(repo) {
   stopifnot(length(repo) == 1)
   git_open(repo)
 
-  has_uncommited_changes <- nrow(git_status(repo = repo)) > 0L
-  if (has_uncommited_changes) {
+  if (has_uncommited_changes(repo)) {
     stop("`repo` must not have uncommited changes: ", repo, call. = FALSE)
   }
 
   invisible(repo)
+}
+
+has_uncommited_changes <- function(repo) {
+  nrow(git_status(repo = repo)) > 0L
 }
 
 file_path <- function(path) {
