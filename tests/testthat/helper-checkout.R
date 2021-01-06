@@ -1,4 +1,5 @@
 initialize_repo_with_new_file <- function(path) {
+  if (!dir.exists(path)) dir.create(path)
   repo <- git_init(path)
 
   file.create(file.path(repo, "a"))
