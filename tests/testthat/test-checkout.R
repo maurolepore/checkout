@@ -1,18 +1,6 @@
 library(gert)
 library(withr)
 
-initialize_repo_with_new_file <- function(path) {
-  repo <- git_init(path)
-
-  file.create(file.path(repo, "a"))
-  git_add(".", repo = repo)
-  git_commit("New file", repo = repo)
-
-  invisible(path)
-}
-
-temp_repo <- function() file.path(tempdir(), "repo")
-
 test_that("with a non-repo errors gracefully", {
   non_repo <- local_tempdir()
   expect_error(checkout(non_repo), "not.*repo")

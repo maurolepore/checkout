@@ -1,7 +1,5 @@
 initialize_repo_with_new_file <- function(path) {
   repo <- git_init(path)
-  git_config_set("user.name", "Jerry", repo = repo)
-  git_config_set("user.email", "jerry@gmail.com", repo = repo)
 
   file.create(file.path(repo, "a"))
   git_add(".", repo = repo)
@@ -9,3 +7,5 @@ initialize_repo_with_new_file <- function(path) {
 
   invisible(path)
 }
+
+temp_repo <- function() file.path(tempdir(), "repo")
