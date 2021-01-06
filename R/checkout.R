@@ -72,8 +72,8 @@ checkout_repo <- function(repo) {
 }
 
 check_checkout <- function(repo) {
-  git_open(repo)
   stopifnot(length(repo) == 1)
+  git_open(repo)
 
   has_uncommited_changes <- nrow(git_status(repo = repo)) > 0L
   if (has_uncommited_changes) {
