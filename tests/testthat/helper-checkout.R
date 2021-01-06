@@ -1,4 +1,4 @@
-initialize_repo_with_new_file <- function(path) {
+new_repo <- function(path) {
   path <- git_init(path)
   git_config_set("user.name", "jerry", repo = path)
   git_config_set("user.email", "jerry@gmail.com", repo = path)

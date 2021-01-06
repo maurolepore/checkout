@@ -9,7 +9,7 @@ test_that("with a non-repo errors gracefully", {
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
-  path <- initialize_repo_with_new_file(temp_dir())
+  path <- new_repo(temp_dir())
   on.exit(unlink(path, recursive = TRUE))
 
   git_branch_create("pr", repo = path)
@@ -26,9 +26,9 @@ test_that("from inside the working directory, checkouts the current branch", {
 })
 
 test_that("checkouts the master branch of multiple repos", {
-  repo1 <- initialize_repo_with_new_file(local_tempdir())
+  repo1 <- new_repo(local_tempdir())
   git_branch_create("pr", checkout = TRUE, repo = repo1)
-  repo2 <- initialize_repo_with_new_file(local_tempdir())
+  repo2 <- new_repo(local_tempdir())
   git_branch_create("pr", checkout = TRUE, repo = repo2)
 
   checkout(c(repo1, repo2))
@@ -38,10 +38,10 @@ test_that("checkouts the master branch of multiple repos", {
 
 test_that("checkouts the master branch of a repo and the current branch of
           the current working directory", {
-  path <- initialize_repo_with_new_file(file.path(tempdir(), "repo"))
+  path <- new_repo(file.path(tempdir(), "repo"))
   git_branch_create("pr", checkout = TRUE, repo = path)
 
-  wd <- initialize_repo_with_new_file(file.path(tempdir(), "wd"))
+  wd <- new_repo(file.path(tempdir(), "wd"))
 
   oldwd <- getwd()
   setwd(wd)
@@ -57,7 +57,7 @@ test_that("checkouts the master branch of a repo and the current branch of
 })
 
 test_that("from outside the working directory, checkouts the master branch", {
-  path <- initialize_repo_with_new_file(local_tempdir())
+  path <- new_repo(local_tempdir())
   git_branch_create("pr", checkout = TRUE, repo = path)
 
   checkout(path)
@@ -65,7 +65,7 @@ test_that("from outside the working directory, checkouts the master branch", {
 })
 
 test_that("works with the 'main' branch of a repo and prefers it over master", {
-  path <- initialize_repo_with_new_file(local_tempdir())
+  path <- new_repo(local_tempdir())
   git_branch_create("main", checkout = TRUE, repo = path)
 
   checkout(path)
@@ -73,13 +73,13 @@ test_that("works with the 'main' branch of a repo and prefers it over master", {
 })
 
 test_that("with uncommited changes throws an error", {
-  path <- initialize_repo_with_new_file(local_tempdir())
+  path <- new_repo(local_tempdir())
   writeLines("change but don't commit", file.path(path, "a"))
   expect_error(checkout(path), "uncommited changes")
 })
 
 test_that("returns repos invisibly", {
-  path <- initialize_repo_with_new_file(local_tempdir())
+  path <- new_repo(local_tempdir())
   expect_invisible(checkout(path))
 })
 
