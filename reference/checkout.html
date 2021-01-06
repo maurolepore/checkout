@@ -140,33 +140,31 @@ that called <code>checkout()</code>.</p>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/maurolepore/checkout'>checkout</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://docs.ropensci.org/gert/'>gert</a></span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Linking to libgit2 v1.1.0, ssh support: YES</span></div><div class='output co'>#&gt; <span class='message'>Global config: /Users/runner/.gitconfig</span></div><div class='output co'>#&gt; <span class='message'>Default user: Jerry Johnson &lt;jerry@gmail.com&gt;</span></div><div class='input'>
-<span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://docs.ropensci.org/gert/reference/user_is_configured.html'>user_is_configured</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span>
-  <span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_config.html'>git_config_set</a></span><span class='op'>(</span><span class='st'>"user.name"</span>, <span class='st'>"Jerry"</span><span class='op'>)</span>
-  <span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_config.html'>git_config_set</a></span><span class='op'>(</span><span class='st'>"user.email"</span>, <span class='st'>"jerry@gmail.com"</span><span class='op'>)</span>
-<span class='op'>}</span>
-
 <span class='co'># Setup two minimal repositories.</span>
-
 <span class='va'>repo_a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"repo_a"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='va'>repo_a</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.create</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>repo_a</span>, <span class='st'>"a-file.txt"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_repo.html'>git_init</a></span><span class='op'>(</span><span class='va'>repo_a</span><span class='op'>)</span>
+<span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_config.html'>git_config_set</a></span><span class='op'>(</span><span class='st'>"user.name"</span>, <span class='st'>"Jerry"</span>, repo <span class='op'>=</span> <span class='va'>repo_a</span><span class='op'>)</span>
+<span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_config.html'>git_config_set</a></span><span class='op'>(</span><span class='st'>"user.email"</span>, <span class='st'>"jerry@gmail.com"</span>, repo <span class='op'>=</span> <span class='va'>repo_a</span><span class='op'>)</span>
 <span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_commit.html'>git_add</a></span><span class='op'>(</span><span class='st'>"."</span>, repo <span class='op'>=</span> <span class='va'>repo_a</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 1 x 3</span><span>
 #&gt;   file       status staged
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> 
 #&gt; </span><span style='color: #555555;'>1</span><span> a-file.txt new    TRUE  </div><div class='input'><span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_commit.html'>git_commit_all</a></span><span class='op'>(</span><span class='st'>"New file"</span>, repo <span class='op'>=</span> <span class='va'>repo_a</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "f1e3115431b0c260dd0c35e3e3a272ca9333e31f"</div><div class='input'>
+</div><div class='output co'>#&gt; [1] "92ce3c6084fb1b37c35d31419a74a24bcfcdd725"</div><div class='input'>
 <span class='va'>repo_b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"repo_b"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='va'>repo_b</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.create</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>repo_b</span>, <span class='st'>"a-file.txt"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_repo.html'>git_init</a></span><span class='op'>(</span><span class='va'>repo_b</span><span class='op'>)</span>
+<span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_config.html'>git_config_set</a></span><span class='op'>(</span><span class='st'>"user.name"</span>, <span class='st'>"Jerry"</span>, repo <span class='op'>=</span> <span class='va'>repo_b</span><span class='op'>)</span>
+<span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_config.html'>git_config_set</a></span><span class='op'>(</span><span class='st'>"user.email"</span>, <span class='st'>"jerry@gmail.com"</span>, repo <span class='op'>=</span> <span class='va'>repo_b</span><span class='op'>)</span>
 <span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_commit.html'>git_add</a></span><span class='op'>(</span><span class='st'>"."</span>, repo <span class='op'>=</span> <span class='va'>repo_b</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 1 x 3</span><span>
 #&gt;   file       status staged
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> 
 #&gt; </span><span style='color: #555555;'>1</span><span> a-file.txt new    TRUE  </div><div class='input'><span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_commit.html'>git_commit_all</a></span><span class='op'>(</span><span class='st'>"New file"</span>, repo <span class='op'>=</span> <span class='va'>repo_b</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "ada85cb2dc9ef06fd384b01d6f54bdd3ea6af04e"</div><div class='input'>
+</div><div class='output co'>#&gt; [1] "92ce3c6084fb1b37c35d31419a74a24bcfcdd725"</div><div class='input'>
 <span class='co'># If we set the directory at `repo_a`, it stays at the branch `pr`, whereas the</span>
 <span class='co'># `repo_b` changes to the branch `master` (or `main`).</span>
 
@@ -187,9 +185,9 @@ that called <code>checkout()</code>.</p>
 </div><div class='output co'>#&gt; [1] "master"</div><div class='input'><span class='fu'><a href='https://docs.ropensci.org/gert/reference/git_branch.html'>git_branch</a></span><span class='op'>(</span><span class='va'>repo_b</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] "master"</div><div class='input'>
 <span class='co'># Cleanup</span>
-<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>repo_a</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>repo_b</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span><span class='op'>(</span><span class='va'>oldwd</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>repo_a</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>repo_b</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
