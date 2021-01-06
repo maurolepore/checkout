@@ -62,17 +62,18 @@ checkout <- function(repos) {
 checkout_impl <- function(repo) {
   check_checkout(repo)
 
-  sanitize_path <- function(path) {
-    file.path(dirname(path), basename(path))
-  }
-  repo_is_wd <- identical(sanitize_path(repo), sanitize_path(getwd()))
-  if (repo_is_wd) {
+
+  if (file_path(repo) == file_path(getwd())) {
     return(invisible(repo))
   } else {
     checkout_default_branch(repo)
   }
 
   invisible(repo)
+}
+
+file_path <- function(path) {
+  unlist(lapply(path, function(x) file.path(dirname(x), basename(x))))
 }
 
 check_checkout <- function(repo) {
