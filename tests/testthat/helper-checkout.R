@@ -8,4 +8,6 @@ initialize_repo_with_new_file <- function(path) {
   invisible(path)
 }
 
-temp_repo <- function() file.path(tempdir(), "repo")
+temp_repo <- function() {
+  file.path(tempdir(), "repo")
+}
