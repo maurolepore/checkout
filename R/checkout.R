@@ -62,7 +62,7 @@ checkout <- function(repos) {
 checkout_impl <- function(repo) {
   check_checkout(repo)
 
-  repo_is_wd <- normalizePath(repo) == normalizePath(getwd())
+  repo_is_wd <- identical(fs::path_sanitize(repo), fs::path_sanitize(getwd()))
   if (repo_is_wd) {
     return(invisible(repo))
   } else {

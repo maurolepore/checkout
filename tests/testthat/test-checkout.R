@@ -3,14 +3,14 @@ library(withr)
 
 test_that("with a non-repo errors gracefully", {
   non_repo <- temp_dir()
-  on.exit(unlink(non_repo, recursive = TRUE))
+  on.exit(unlink(non_repo, recursive = TRUE), add = TRUE)
 
   expect_error(checkout(non_repo), "not.*repo")
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
   path <- new_repo(temp_dir())
-  on.exit(unlink(path, recursive = TRUE))
+  on.exit(unlink(path, recursive = TRUE), add = TRUE)
 
   git_branch_create("pr", repo = path)
   git_branch_checkout("pr", repo = path)
@@ -18,7 +18,7 @@ test_that("from inside the working directory, checkouts the current branch", {
   oldwd <- getwd()
   setwd(path)
   on.exit(setwd(oldwd), add = TRUE)
-  getwd()
+
   checkout(path)
   expect_equal(git_branch(repo = path), "pr")
 
@@ -26,9 +26,12 @@ test_that("from inside the working directory, checkouts the current branch", {
 })
 
 test_that("checkouts the master branch of multiple repos", {
-  repo1 <- new_repo(local_tempdir())
+  repo1 <- new_repo(temp_dir())
+  on.exit(unlink(repo1, recursive = TRUE), add = TRUE)
   git_branch_create("pr", checkout = TRUE, repo = repo1)
-  repo2 <- new_repo(local_tempdir())
+
+  repo2 <- new_repo(temp_dir())
+  on.exit(unlink(repo2, recursive = TRUE), add = TRUE)
   git_branch_create("pr", checkout = TRUE, repo = repo2)
 
   checkout(c(repo1, repo2))
