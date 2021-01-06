@@ -55,13 +55,12 @@
 #' unlink(repo_b)
 #' setwd(oldwd)
 checkout <- function(repos) {
-  unlist(lapply(repos, checkout_impl))
+  unlist(lapply(repos, checkout_repo))
   invisible(repos)
 }
 
-checkout_impl <- function(repo) {
+checkout_repo <- function(repo) {
   check_checkout(repo)
-
 
   if (file_path(repo) == file_path(getwd())) {
     return(invisible(repo))
@@ -70,10 +69,6 @@ checkout_impl <- function(repo) {
   }
 
   invisible(repo)
-}
-
-file_path <- function(path) {
-  unlist(lapply(path, function(x) file.path(dirname(x), basename(x))))
 }
 
 check_checkout <- function(repo) {
@@ -86,6 +81,10 @@ check_checkout <- function(repo) {
   }
 
   invisible(repo)
+}
+
+file_path <- function(path) {
+  unlist(lapply(path, function(x) file.path(dirname(x), basename(x))))
 }
 
 checkout_default_branch <- function(repo) {
