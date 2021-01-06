@@ -3,6 +3,8 @@ initialize_repo_with_new_file <- function(path) {
   dir.create(path)
 
   path <- git_init(path)
+  git_config_set("user.name", "jerry", repo = path)
+  git_config_set("user.email", "jerry@gmail.com", repo = path)
 
   file.create(file.path(path, "a"))
   git_add(".", repo = path)
