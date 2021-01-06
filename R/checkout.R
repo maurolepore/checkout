@@ -56,7 +56,6 @@
 #' setwd(oldwd)
 checkout <- function(repos) {
   unlist(lapply(repos, checkout_impl))
-
   invisible(repos)
 }
 
