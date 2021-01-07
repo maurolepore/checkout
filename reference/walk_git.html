@@ -174,11 +174,11 @@ invisibly.</p>
 
 <span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"status"</span><span class='op'>)</span>
 <span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"status"</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo1`
+</div><div class='output co'>#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpkM4zfU/repo1`
 #&gt; [1] "On branch master"  ""                  "No commits yet"   
 #&gt; [4] ""                  "nothing to commit"
 #&gt; 
-#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo2`
+#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpkM4zfU/repo2`
 #&gt; [1] "On branch master"  ""                  "No commits yet"   
 #&gt; [4] ""                  "nothing to commit"
 #&gt; </div><div class='input'>
@@ -186,11 +186,11 @@ invisibly.</p>
   <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"add ."</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"commit -m 'Initialize' --allow-empty"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"log --oneline -n 1"</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo1`
-#&gt; [1] "c8225da Initialize"
+</div><div class='output co'>#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpkM4zfU/repo1`
+#&gt; [1] "7ca483a Initialize"
 #&gt; 
-#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo2`
-#&gt; [1] "c8225da Initialize"
+#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpkM4zfU/repo2`
+#&gt; [1] "7ca483a Initialize"
 #&gt; </div><div class='input'>
 <span class='co'># Cleanup</span>
 <span class='fu'>walk</span><span class='op'>(</span><span class='va'>repos</span>, <span class='va'>unlink</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>

@@ -106,7 +106,7 @@
 <span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu">walk</span><span class="op">(</span><span class="va">dir.create</span><span class="op">)</span>
 <span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"a-file.txt"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">walk</span><span class="op">(</span><span class="va">file.create</span><span class="op">)</span>
 <span class="va">repos</span>
-<span class="co">#&gt; [1] "/tmp/Rtmprgylhu/repo1" "/tmp/Rtmprgylhu/repo2"</span>
+<span class="co">#&gt; [1] "/tmp/RtmpK9RbPy/repo1" "/tmp/RtmpK9RbPy/repo2"</span>
 
 <span class="va">repos</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"init"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -116,11 +116,11 @@
   <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"commit -m 'Add a-file.txt'"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Each repo now has a commit</span>
   <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"log --oneline -n 1 --decorate"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo1`</span>
-<span class="co">#&gt; [1] "e5b6f28 (HEAD -&gt; main) Add a-file.txt"</span>
+<span class="co">#&gt; $`/tmp/RtmpK9RbPy/repo1`</span>
+<span class="co">#&gt; [1] "9767b8f (HEAD -&gt; main) Add a-file.txt"</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo2`</span>
-<span class="co">#&gt; [1] "e5b6f28 (HEAD -&gt; main) Add a-file.txt"</span></code></pre></div>
+<span class="co">#&gt; $`/tmp/RtmpK9RbPy/repo2`</span>
+<span class="co">#&gt; [1] "9767b8f (HEAD -&gt; main) Add a-file.txt"</span></code></pre></div>
 <ul>
 <li>
 <code><a href="reference/checkout.html">checkout()</a></code> is inspired by the <code>ref</code> argument of <a href="https://github.com/actions/checkout" class="uri">https://github.com/actions/checkout</a> and helps work locally in a way similar to GitHub actions. If we set the directory at <code>repo1</code>, it stays at the branch <code>pr</code>, whereas the <code>repo2</code> changes to the branch <code>master</code> (or <code>main</code>).</li>
@@ -133,18 +133,18 @@
 
 <span class="co"># Compare before and after `checkout()`</span>
 <span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"branch"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo1`</span>
+<span class="co">#&gt; $`/tmp/RtmpK9RbPy/repo1`</span>
 <span class="co">#&gt; [1] "  main" "* pr"  </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo2`</span>
+<span class="co">#&gt; $`/tmp/RtmpK9RbPy/repo2`</span>
 <span class="co">#&gt; [1] "  main" "* pr"</span>
 <span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/checkout.html">checkout</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"branch"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo1`</span>
+<span class="co">#&gt; $`/tmp/RtmpK9RbPy/repo1`</span>
 <span class="co">#&gt; [1] "  main" "* pr"  </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo2`</span>
-<span class="co">#&gt; [1] "  main"   "* master" "  pr"</span>
+<span class="co">#&gt; $`/tmp/RtmpK9RbPy/repo2`</span>
+<span class="co">#&gt; [1] "* main" "  pr"</span>
 
 <span class="co"># Cleanup</span>
 <span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="va">oldwd</span><span class="op">)</span>
