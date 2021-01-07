@@ -14,7 +14,7 @@ test_that("with a repo with clean status, shows 'nothing to commit'", {
 
 test_that("with a path that isn't a repo erorrs gracefully", {
   not_repo <- tempdir()
-  if(!dir.exists(not_repo)) dir.create(not_repo)
+  if (!dir.exists(not_repo)) dir.create(not_repo)
   on.exit(destroy(not_repo), add = TRUE)
   stopifnot(dir.exists(not_repo))
 
@@ -23,7 +23,7 @@ test_that("with a path that isn't a repo erorrs gracefully", {
 
 test_that("is sensitive to stop_on_error", {
   not_repo <- tempdir()
-  if(!dir.exists(not_repo)) dir.create(not_repo)
+  if (!dir.exists(not_repo)) dir.create(not_repo)
   on.exit(destroy(not_repo), add = TRUE)
   stopifnot(dir.exists(not_repo))
 

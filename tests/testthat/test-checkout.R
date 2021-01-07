@@ -29,7 +29,9 @@ test_that("checkouts the master branch of multiple repos", {
   on.exit(destroy(repos[[1]]), add = TRUE)
   on.exit(destroy(repos[[2]]), add = TRUE)
 
-  repos %>% file.path("a-file.txt") %>% walk(file.create)
+  repos %>%
+    file.path("a-file.txt") %>%
+    walk(file.create)
   repos %>%
     walk_git("init") %>%
     walk_git("config user.name Jerry") %>%
@@ -52,7 +54,9 @@ test_that("stays at the branch of repo if it's the wd", {
   on.exit(destroy(repos[[1]]), add = TRUE)
   on.exit(destroy(repos[[2]]), add = TRUE)
 
-  repos %>% file.path("a-file.txt") %>% walk(file.create)
+  repos %>%
+    file.path("a-file.txt") %>%
+    walk(file.create)
   repos %>%
     walk_git("init") %>%
     walk_git("config user.name Jerry") %>%
@@ -97,7 +101,9 @@ test_that("does not create two default branches but either main or master", {
   on.exit(destroy(repos[[1]]), add = TRUE)
   on.exit(destroy(repos[[2]]), add = TRUE)
 
-  repos %>% file.path("a-file.txt") %>% walk(file.create)
+  repos %>%
+    file.path("a-file.txt") %>%
+    walk(file.create)
   repos %>%
     walk_git("init") %>%
     walk_git("config user.name Jerry") %>%
