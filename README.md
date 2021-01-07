@@ -48,7 +48,7 @@ repos <- file.path(tempdir(), paste0("repo", 1:2))
 repos %>% walk(dir.create)
 repos %>% file.path("a-file.txt") %>% walk(file.create)
 repos
-#> [1] "/tmp/Rtmprgylhu/repo1" "/tmp/Rtmprgylhu/repo2"
+#> [1] "/tmp/RtmpK9RbPy/repo1" "/tmp/RtmpK9RbPy/repo2"
 
 repos %>%
   walk_git("init") %>%
@@ -58,11 +58,11 @@ repos %>%
   walk_git("commit -m 'Add a-file.txt'") %>%
   # Each repo now has a commit
   walk_git("log --oneline -n 1 --decorate", verbose = TRUE)
-#> $`/tmp/Rtmprgylhu/repo1`
-#> [1] "e5b6f28 (HEAD -> main) Add a-file.txt"
+#> $`/tmp/RtmpK9RbPy/repo1`
+#> [1] "9767b8f (HEAD -> main) Add a-file.txt"
 #> 
-#> $`/tmp/Rtmprgylhu/repo2`
-#> [1] "e5b6f28 (HEAD -> main) Add a-file.txt"
+#> $`/tmp/RtmpK9RbPy/repo2`
+#> [1] "9767b8f (HEAD -> main) Add a-file.txt"
 ```
 
 -   `checkout()` is inspired by the `ref` argument of
@@ -79,18 +79,18 @@ repos %>% walk_git("checkout -b pr")
 
 # Compare before and after `checkout()`
 repos %>% walk_git("branch", verbose = TRUE)
-#> $`/tmp/Rtmprgylhu/repo1`
+#> $`/tmp/RtmpK9RbPy/repo1`
 #> [1] "  main" "* pr"  
 #> 
-#> $`/tmp/Rtmprgylhu/repo2`
+#> $`/tmp/RtmpK9RbPy/repo2`
 #> [1] "  main" "* pr"
 repos %>% checkout()
 repos %>% walk_git("branch", verbose = TRUE)
-#> $`/tmp/Rtmprgylhu/repo1`
+#> $`/tmp/RtmpK9RbPy/repo1`
 #> [1] "  main" "* pr"  
 #> 
-#> $`/tmp/Rtmprgylhu/repo2`
-#> [1] "  main"   "* master" "  pr"
+#> $`/tmp/RtmpK9RbPy/repo2`
+#> [1] "* main" "  pr"
 
 # Cleanup
 setwd(oldwd)
