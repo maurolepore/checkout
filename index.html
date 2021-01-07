@@ -88,57 +88,67 @@
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maurolepore/checkout">checkout</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/gert/">gert</a></span><span class="op">)</span>
-<span class="co">#&gt; Linking to libgit2 v0.26.0, ssh support: YES</span>
-<span class="co">#&gt; Global config: /home/mauro/.gitconfig</span>
-<span class="co">#&gt; Default user: Mauro Lepore &lt;maurolepore@gmail.com&gt;</span></code></pre></div>
-<p>Setup two minimal repositories.</p>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
+
+<span class="co"># Helper</span>
+<span class="va">walk</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">f</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">f</span>, <span class="va">...</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<ul>
+<li>
+<code><a href="reference/walk_git.html">walk_git()</a></code> helps work with multiple Git repositories at once. Here we use it to setup two minimal repositories.</li>
+</ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">repo_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"repo_a"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">repo_a</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files.html">file.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">repo_a</span>, <span class="st">"a-file.txt"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_repo.html">git_init</a></span><span class="op">(</span><span class="va">repo_a</span><span class="op">)</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_commit.html">git_add</a></span><span class="op">(</span><span class="st">"."</span>, repo <span class="op">=</span> <span class="va">repo_a</span><span class="op">)</span>
-<span class="co">#&gt;         file status staged</span>
-<span class="co">#&gt; 1 a-file.txt    new   TRUE</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_commit.html">git_commit_all</a></span><span class="op">(</span><span class="st">"New file"</span>, repo <span class="op">=</span> <span class="va">repo_a</span><span class="op">)</span>
-<span class="co">#&gt; [1] "4107073d3271e6ad7c4a6c046239b459780b9921"</span>
+<code class="sourceCode R"><span class="va">repos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"repo"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
+<span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu">walk</span><span class="op">(</span><span class="va">dir.create</span><span class="op">)</span>
+<span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="st">"a-file.txt"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">walk</span><span class="op">(</span><span class="va">file.create</span><span class="op">)</span>
+<span class="va">repos</span>
+<span class="co">#&gt; [1] "/tmp/Rtmprgylhu/repo1" "/tmp/Rtmprgylhu/repo2"</span>
 
-<span class="va">repo_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"repo_b"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="va">repo_b</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files.html">file.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">repo_b</span>, <span class="st">"a-file.txt"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_repo.html">git_init</a></span><span class="op">(</span><span class="va">repo_b</span><span class="op">)</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_commit.html">git_add</a></span><span class="op">(</span><span class="st">"."</span>, repo <span class="op">=</span> <span class="va">repo_b</span><span class="op">)</span>
-<span class="co">#&gt;         file status staged</span>
-<span class="co">#&gt; 1 a-file.txt    new   TRUE</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_commit.html">git_commit_all</a></span><span class="op">(</span><span class="st">"New file"</span>, repo <span class="op">=</span> <span class="va">repo_b</span><span class="op">)</span>
-<span class="co">#&gt; [1] "4107073d3271e6ad7c4a6c046239b459780b9921"</span></code></pre></div>
-<p>If we set the directory at <code>repo_a</code>, it stays at the branch <code>pr</code>, whereas the <code>repo_b</code> changes to the branch <code>master</code> (or <code>main</code>).</p>
+<span class="va">repos</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"init"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"config user.name Jerry"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"config user.email jerry@gmail.com"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"add ."</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"commit -m 'Add a-file.txt'"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="co"># Each repo now has a commit</span>
+  <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"log --oneline -n 1 --decorate"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo1`</span>
+<span class="co">#&gt; [1] "e5b6f28 (HEAD -&gt; main) Add a-file.txt"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo2`</span>
+<span class="co">#&gt; [1] "e5b6f28 (HEAD -&gt; main) Add a-file.txt"</span></code></pre></div>
+<ul>
+<li>
+<code><a href="reference/checkout.html">checkout()</a></code> is inspired by the <code>ref</code> argument of <a href="https://github.com/actions/checkout" class="uri">https://github.com/actions/checkout</a> and helps work locally in a way similar to GitHub actions. If we set the directory at <code>repo1</code>, it stays at the branch <code>pr</code>, whereas the <code>repo2</code> changes to the branch <code>master</code> (or <code>main</code>).</li>
+</ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="va">repo_a</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">oldwd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html">getwd</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="va">repos</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_branch.html">git_branch_create</a></span><span class="op">(</span><span class="st">"pr"</span>, checkout <span class="op">=</span> <span class="cn">TRUE</span>, repo <span class="op">=</span> <span class="va">repo_a</span><span class="op">)</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_branch.html">git_branch_create</a></span><span class="op">(</span><span class="st">"pr"</span>, checkout <span class="op">=</span> <span class="cn">TRUE</span>, repo <span class="op">=</span> <span class="va">repo_b</span><span class="op">)</span>
+<span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"checkout -b pr"</span><span class="op">)</span>
 
-<span class="co"># Before</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_branch.html">git_branch</a></span><span class="op">(</span><span class="va">repo_a</span><span class="op">)</span>
-<span class="co">#&gt; [1] "pr"</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_branch.html">git_branch</a></span><span class="op">(</span><span class="va">repo_b</span><span class="op">)</span>
-<span class="co">#&gt; [1] "pr"</span>
+<span class="co"># Compare before and after `checkout()`</span>
+<span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"branch"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo1`</span>
+<span class="co">#&gt; [1] "  main" "* pr"  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo2`</span>
+<span class="co">#&gt; [1] "  main" "* pr"</span>
+<span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/checkout.html">checkout</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/walk_git.html">walk_git</a></span><span class="op">(</span><span class="st">"branch"</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo1`</span>
+<span class="co">#&gt; [1] "  main" "* pr"  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`/tmp/Rtmprgylhu/repo2`</span>
+<span class="co">#&gt; [1] "  main"   "* master" "  pr"</span>
 
-<span class="fu"><a href="reference/checkout.html">checkout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">repo_a</span>, <span class="va">repo_b</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># After</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_branch.html">git_branch</a></span><span class="op">(</span><span class="va">repo_a</span><span class="op">)</span>
-<span class="co">#&gt; [1] "pr"</span>
-<span class="fu"><a href="https://docs.ropensci.org/gert/reference/git_branch.html">git_branch</a></span><span class="op">(</span><span class="va">repo_b</span><span class="op">)</span>
-<span class="co">#&gt; [1] "master"</span></code></pre></div>
-<p>This behaviour is inspired by the <code>ref</code> argument of <a href="https://github.com/actions/checkout" class="uri">https://github.com/actions/checkout</a> and helps work locally in a way similar to GitHub actions.</p>
+<span class="co"># Cleanup</span>
+<span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="va">oldwd</span><span class="op">)</span>
+<span class="va">repos</span> <span class="op">%&gt;%</span> <span class="fu">walk</span><span class="op">(</span><span class="va">unlink</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
   </div>

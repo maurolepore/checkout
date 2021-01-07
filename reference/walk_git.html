@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Checkout Git repositories — checkout • checkout</title>
+<title>Pipe-able, vectorized, and lightweight implementation of git in R — walk_git • checkout</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Checkout Git repositories — checkout" />
-<meta property="og:description" content="Checkout the main or master branch of the given Git repositories. But
-stay on the current reference (e.g. branch) if checking out the repository
-that called checkout()." />
+<meta property="og:title" content="Pipe-able, vectorized, and lightweight implementation of git in R — walk_git" />
+<meta property="og:description" content="Apply a Git command to each path." />
 
 
 
@@ -110,82 +108,92 @@ that called checkout()." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Checkout Git repositories</h1>
-    <small class="dont-index">Source: <a href='https://github.com/maurolepore/checkout/blob/master/R/checkout.R'><code>R/checkout.R</code></a></small>
-    <div class="hidden name"><code>checkout.Rd</code></div>
+    <h1>Pipe-able, vectorized, and lightweight implementation of git in R</h1>
+    <small class="dont-index">Source: <a href='https://github.com/maurolepore/checkout/blob/master/R/walk_git.R'><code>R/walk_git.R</code></a></small>
+    <div class="hidden name"><code>walk_git.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Checkout the <code>main</code> or <code>master</code> branch of the given Git repositories. But
-stay on the current reference (e.g. branch) if checking out the repository
-that called <code>checkout()</code>.</p>
+    <p>Apply a Git command to each <code>path</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>checkout</span><span class='op'>(</span><span class='va'>repos</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>walk_git</span><span class='op'>(</span><span class='va'>path</span>, <span class='va'>command</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span>, stop_on_error <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>repos</th>
-      <td><p>Path to one or more Git repositories.</p></td>
+      <th>path</th>
+      <td><p>Path to one or multiple Git repos.</p></td>
+    </tr>
+    <tr>
+      <th>command</th>
+      <td><p>A Git command, e.g. "status" or "log --oneline -n 1".</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Print Git's output?</p></td>
+    </tr>
+    <tr>
+      <th>stop_on_error</th>
+      <td><p>If Git fails, do you want an R error?</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed to <a href='https://rdrr.io/r/base/system.html'>system</a>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Called for its side effect. Returns <code>repos</code> invisibly.</p>
+    <p><code>walk_git()</code> is called for its side effect; it returns <code>path</code>
+invisibly.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
 
-<span class='co'># Helper</span>
+<span class='co'># helper</span>
 <span class='va'>walk</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>f</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>f</span>, <span class='va'>...</span><span class='op'>)</span>
   <span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 <span class='op'>}</span>
 
-<span class='co'># Setup two minimal repositories.</span>
 <span class='va'>repos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"repo"</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>repos</span>
-</div><div class='output co'>#&gt; [1] "/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo1"
-#&gt; [2] "/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo2"</div><div class='input'><span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>walk</span><span class='op'>(</span><span class='va'>dir.create</span><span class='op'>)</span>
+<span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>walk</span><span class='op'>(</span><span class='va'>dir.create</span><span class='op'>)</span>
+
+<span class='co'># Fails because the repo isn't initialized</span>
 <span class='va'>repos</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"a-file.txt"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>walk</span><span class='op'>(</span><span class='va'>file.create</span><span class='op'>)</span>
+  <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"status"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Error : fatal: not a git repository (or any of the parent directories): .git</div><div class='input'>
+<span class='co'># Don't throw an error</span>
 <span class='va'>repos</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='walk_git.html'>walk_git</a></span><span class='op'>(</span><span class='st'>"init"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='walk_git.html'>walk_git</a></span><span class='op'>(</span><span class='st'>"config user.name Jerry"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='walk_git.html'>walk_git</a></span><span class='op'>(</span><span class='st'>"config user.email jerry@gmail.com"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='walk_git.html'>walk_git</a></span><span class='op'>(</span><span class='st'>"add ."</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='walk_git.html'>walk_git</a></span><span class='op'>(</span><span class='st'>"commit -m 'New file'"</span><span class='op'>)</span>
+  <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"status"</span>, stop_on_error <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
-<span class='co'># If we set the directory at `repo1`, it stays at the branch `pr`, whereas the</span>
-<span class='co'># `repo2` changes to the branch `master` (or `main`).</span>
+<span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"init"</span><span class='op'>)</span>
 
-<span class='va'>oldwd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span><span class='op'>(</span><span class='va'>repos</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-
-<span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='walk_git.html'>walk_git</a></span><span class='op'>(</span><span class='st'>"checkout -b pr"</span><span class='op'>)</span>
-
-<span class='co'># Compare before and after `checkout()`</span>
-<span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='walk_git.html'>walk_git</a></span><span class='op'>(</span><span class='st'>"branch"</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"status"</span><span class='op'>)</span>
+<span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"status"</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo1`
-#&gt; [1] "  master" "* pr"    
+#&gt; [1] "On branch master"  ""                  "No commits yet"   
+#&gt; [4] ""                  "nothing to commit"
 #&gt; 
 #&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo2`
-#&gt; [1] "  master" "* pr"    
-#&gt; </div><div class='input'><span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>checkout</span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='walk_git.html'>walk_git</a></span><span class='op'>(</span><span class='st'>"branch"</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+#&gt; [1] "On branch master"  ""                  "No commits yet"   
+#&gt; [4] ""                  "nothing to commit"
+#&gt; </div><div class='input'>
+<span class='va'>repos</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"add ."</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"commit -m 'Initialize' --allow-empty"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>walk_git</span><span class='op'>(</span><span class='st'>"log --oneline -n 1"</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo1`
-#&gt; [1] "* master" "  pr"    
+#&gt; [1] "c8225da Initialize"
 #&gt; 
 #&gt; $`/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCxAlj9/repo2`
-#&gt; [1] "* master" "  pr"    
+#&gt; [1] "c8225da Initialize"
 #&gt; </div><div class='input'>
 <span class='co'># Cleanup</span>
-<span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>setwd</a></span><span class='op'>(</span><span class='va'>oldwd</span><span class='op'>)</span>
-<span class='va'>repos</span> <span class='op'>%&gt;%</span> <span class='fu'>walk</span><span class='op'>(</span><span class='va'>unlink</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>walk</span><span class='op'>(</span><span class='va'>repos</span>, <span class='va'>unlink</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
