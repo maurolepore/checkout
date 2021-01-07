@@ -18,49 +18,40 @@ stay on the current reference (e.g. branch) if checking out the repository
 that called \code{checkout()}.
 }
 \examples{
-library(checkout)
-library(gert)
+library(magrittr)
+
+# Helper
+walk <- function(x, f, ...) {
+  lapply(x, f, ...)
+  invisible(x)
+}
 
 # Setup two minimal repositories.
-repo_a <- file.path(tempdir(), "repo_a")
-dir.create(repo_a)
-file.create(file.path(repo_a, "a-file.txt"))
-git_init(repo_a)
-git_config_set("user.name", "Jerry", repo = repo_a)
-git_config_set("user.email", "jerry@gmail.com", repo = repo_a)
-git_add(".", repo = repo_a)
-git_commit_all("New file", repo = repo_a)
+repos <- file.path(tempdir(), paste0("repo", 1:2))
+repos
+repos \%>\% walk(dir.create)
+repos \%>\% file.path("a-file.txt") \%>\% walk(file.create)
+repos \%>\%
+  walk_git("init") \%>\%
+  walk_git("config user.name Jerry") \%>\%
+  walk_git("config user.email jerry@gmail.com") \%>\%
+  walk_git("add .") \%>\%
+  walk_git("commit -m 'New file'")
 
-repo_b <- file.path(tempdir(), "repo_b")
-dir.create(repo_b)
-file.create(file.path(repo_b, "a-file.txt"))
-git_init(repo_b)
-git_config_set("user.name", "Jerry", repo = repo_b)
-git_config_set("user.email", "jerry@gmail.com", repo = repo_b)
-git_add(".", repo = repo_b)
-git_commit_all("New file", repo = repo_b)
-
-# If we set the directory at `repo_a`, it stays at the branch `pr`, whereas the
-# `repo_b` changes to the branch `master` (or `main`).
+# If we set the directory at `repo1`, it stays at the branch `pr`, whereas the
+# `repo2` changes to the branch `master` (or `main`).
 
 oldwd <- getwd()
-setwd(repo_a)
+setwd(repos[[1]])
 
-git_branch_create("pr", checkout = TRUE, repo = repo_a)
-git_branch_create("pr", checkout = TRUE, repo = repo_b)
+repos \%>\% walk_git("checkout -b pr")
 
-# Before
-git_branch(repo_a)
-git_branch(repo_b)
-
-checkout(c(repo_a, repo_b))
-
-# After
-git_branch(repo_a)
-git_branch(repo_b)
+# Compare before and after `checkout()`
+repos \%>\% walk_git("branch", verbose = TRUE)
+repos \%>\% checkout()
+repos \%>\% walk_git("branch", verbose = TRUE)
 
 # Cleanup
 setwd(oldwd)
-unlink(repo_a, recursive = TRUE)
-unlink(repo_b, recursive = TRUE)
+repos \%>\% walk(unlink, recursive = TRUE)
 }

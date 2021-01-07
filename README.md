@@ -86,7 +86,7 @@ checkout(c(repo_a, repo_b))
 git_branch(repo_a)
 #> [1] "pr"
 git_branch(repo_b)
-#> [1] "master"
+#> [1] "main"
 ```
 
 This behaviour is inspired by the `ref` argument of

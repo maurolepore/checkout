@@ -9,67 +9,71 @@ test_that("from inside the working directory, checkouts the current branch", {
   path <- new_repo(temp_dir())
   on.exit(destroy(path), add = TRUE)
 
-  git_branch_create("pr", repo = path)
-  git_branch_checkout("pr", repo = path)
+  walk_git(path, "checkout -b pr")
 
   oldwd <- getwd()
   setwd(path)
   on.exit(setwd(oldwd), add = TRUE)
 
   checkout(path)
-  expect_equal(git_branch(repo = path), "pr")
+  has_pr_branch <- any(grepl("* pr", map_git(path, "branch")))
+  expect_true(has_pr_branch)
 
   setwd(oldwd)
 })
 
 test_that("checkouts the master branch of multiple repos", {
-  repo1 <- new_repo(temp_dir())
-  on.exit(destroy(repo1), add = TRUE)
-  git_branch_create("pr", checkout = TRUE, repo = repo1)
+  # Setup two minimal repositories.
+  repos <- file.path(tempdir(), paste0("repo", 1:2))
+  repos %>% walk(dir.create)
+  on.exit(destroy(repos[[1]]), add = TRUE)
+  on.exit(destroy(repos[[2]]), add = TRUE)
 
-  repo2 <- new_repo(temp_dir())
-  on.exit(destroy(repo2), add = TRUE)
-  git_branch_create("pr", checkout = TRUE, repo = repo2)
+  repos %>% file.path("a-file.txt") %>% walk(file.create)
+  repos %>%
+    walk_git("init") %>%
+    walk_git("config user.name Jerry") %>%
+    walk_git("config user.email jerry@gmail.com") %>%
+    walk_git("add .") %>%
+    walk_git("commit -m 'New file'")
 
-  checkout(c(repo1, repo2))
-  expect_equal(git_branch(repo = repo1), "master")
-  expect_equal(git_branch(repo = repo2), "master")
+  checkout(repos)
+  out <- repos %>% map_git("branch")
+  at_main <- all(grepl("* main", out, fixed = TRUE))
+  at_master <- all(grepl("* master", out, fixed = TRUE))
+
+  expect_true(at_main || at_master)
 })
 
-test_that("checkouts the master branch of a repo and the current branch of
-          the current working directory", {
-  path <- new_repo(temp_dir("repo1"))
-  git_branch_create("pr", checkout = TRUE, repo = path)
+test_that("stays at the branch of repo if it's the wd", {
+  # Setup two minimal repositories.
+  repos <- file.path(tempdir(), paste0("repo", 1:2))
+  repos %>% walk(dir.create)
+  on.exit(destroy(repos[[1]]), add = TRUE)
+  on.exit(destroy(repos[[2]]), add = TRUE)
 
-  wd <- new_repo(temp_dir("repo2"))
-  git_branch_create("pr", checkout = TRUE, repo = wd)
+  repos %>% file.path("a-file.txt") %>% walk(file.create)
+  repos %>%
+    walk_git("init") %>%
+    walk_git("config user.name Jerry") %>%
+    walk_git("config user.email jerry@gmail.com") %>%
+    walk_git("add .") %>%
+    walk_git("commit -m 'New file'")
 
   oldwd <- getwd()
-  setwd(wd)
+  setwd(repos[[1]])
   on.exit(setwd(oldwd), add = TRUE)
-  checkout(c(path, wd))
 
-  expect_equal(git_branch(repo = path), "master")
-  expect_equal(git_branch(repo = wd), "pr")
+  repos %>% walk_git("checkout -b pr")
+  checkout(repos)
+  out <- repos %>% map_git("branch")
 
-  setwd(oldwd)
-})
+  at_pr <- any(grepl("* pr", out[[1]], fixed = TRUE))
+  expect_true(at_pr)
 
-test_that("from outside the working directory, checkouts the master branch", {
-  path <- new_repo(temp_dir())
-  git_branch_create("pr", checkout = TRUE, repo = path)
-
-  checkout(path)
-  expect_equal(git_branch(repo = path), "master")
-})
-
-test_that("works with the 'main' branch of a repo and prefers it over master", {
-  path <- new_repo(temp_dir())
-  on.exit(destroy(path), add = TRUE)
-  git_branch_create("main", checkout = TRUE, repo = path)
-
-  checkout(path)
-  expect_equal(git_branch(repo = path), "main")
+  at_main <- any(grepl("* main", out[[2]], fixed = TRUE))
+  at_master <- any(grepl("* master", out[[2]], fixed = TRUE))
+  expect_true(at_main || at_master)
 })
 
 test_that("with uncommited changes throws an error", {
@@ -85,4 +89,3 @@ test_that("returns repos invisibly", {
 
   expect_invisible(checkout(path))
 })
-
