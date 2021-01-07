@@ -21,3 +21,7 @@ temp_dir <- function(name = "temp_dir") {
 destroy <- function(path) {
   unlink(path, recursive = TRUE)
 }
+
+expect_no_error <- function(object) {
+  expect_error(object, regexp = NA)
+}
