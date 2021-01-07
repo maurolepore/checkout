@@ -30,7 +30,9 @@ walk <- function(x, f, ...) {
 repos <- file.path(tempdir(), paste0("repo", 1:2))
 repos
 repos \%>\% walk(dir.create)
-repos \%>\% file.path("a-file.txt") \%>\% walk(file.create)
+repos \%>\%
+  file.path("a-file.txt") \%>\%
+  walk(file.create)
 repos \%>\%
   walk_git("init") \%>\%
   walk_git("config user.name Jerry") \%>\%
