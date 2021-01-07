@@ -29,66 +29,70 @@ devtools::install_github("maurolepore/checkout")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
 ``` r
 library(checkout)
-library(gert)
-#> Linking to libgit2 v0.26.0, ssh support: YES
-#> Global config: /home/mauro/.gitconfig
-#> Default user: Mauro Lepore <maurolepore@gmail.com>
+library(magrittr)
+
+# Helper
+walk <- function(x, f, ...) {
+  lapply(x, f, ...)
+  invisible(x)
+}
 ```
 
-Setup two minimal repositories.
+-   `walk_git()` helps work with multiple Git repositories at once. Here
+    we use it to setup two minimal repositories.
 
 ``` r
-repo_a <- file.path(tempdir(), "repo_a")
-dir.create(repo_a)
-file.create(file.path(repo_a, "a-file.txt"))
-#> [1] TRUE
-git_init(repo_a)
-git_add(".", repo = repo_a)
-#>         file status staged
-#> 1 a-file.txt    new   TRUE
-git_commit_all("New file", repo = repo_a)
-#> [1] "4107073d3271e6ad7c4a6c046239b459780b9921"
+repos <- file.path(tempdir(), paste0("repo", 1:2))
+repos %>% walk(dir.create)
+repos %>% file.path("a-file.txt") %>% walk(file.create)
+repos
+#> [1] "/tmp/Rtmprgylhu/repo1" "/tmp/Rtmprgylhu/repo2"
 
-repo_b <- file.path(tempdir(), "repo_b")
-dir.create(repo_b)
-file.create(file.path(repo_b, "a-file.txt"))
-#> [1] TRUE
-git_init(repo_b)
-git_add(".", repo = repo_b)
-#>         file status staged
-#> 1 a-file.txt    new   TRUE
-git_commit_all("New file", repo = repo_b)
-#> [1] "4107073d3271e6ad7c4a6c046239b459780b9921"
+repos %>%
+  walk_git("init") %>%
+  walk_git("config user.name Jerry") %>%
+  walk_git("config user.email jerry@gmail.com") %>%
+  walk_git("add .") %>%
+  walk_git("commit -m 'Add a-file.txt'") %>%
+  # Each repo now has a commit
+  walk_git("log --oneline -n 1 --decorate", verbose = TRUE)
+#> $`/tmp/Rtmprgylhu/repo1`
+#> [1] "e5b6f28 (HEAD -> main) Add a-file.txt"
+#> 
+#> $`/tmp/Rtmprgylhu/repo2`
+#> [1] "e5b6f28 (HEAD -> main) Add a-file.txt"
 ```
 
-If we set the directory at `repo_a`, it stays at the branch `pr`,
-whereas the `repo_b` changes to the branch `master` (or `main`).
+-   `checkout()` is inspired by the `ref` argument of
+    <https://github.com/actions/checkout> and helps work locally in a
+    way similar to GitHub actions. If we set the directory at `repo1`,
+    it stays at the branch `pr`, whereas the `repo2` changes to the
+    branch `master` (or `main`).
 
 ``` r
-setwd(repo_a)
+oldwd <- getwd()
+setwd(repos[[1]])
 
-git_branch_create("pr", checkout = TRUE, repo = repo_a)
-git_branch_create("pr", checkout = TRUE, repo = repo_b)
+repos %>% walk_git("checkout -b pr")
 
-# Before
-git_branch(repo_a)
-#> [1] "pr"
-git_branch(repo_b)
-#> [1] "pr"
+# Compare before and after `checkout()`
+repos %>% walk_git("branch", verbose = TRUE)
+#> $`/tmp/Rtmprgylhu/repo1`
+#> [1] "  main" "* pr"  
+#> 
+#> $`/tmp/Rtmprgylhu/repo2`
+#> [1] "  main" "* pr"
+repos %>% checkout()
+repos %>% walk_git("branch", verbose = TRUE)
+#> $`/tmp/Rtmprgylhu/repo1`
+#> [1] "  main" "* pr"  
+#> 
+#> $`/tmp/Rtmprgylhu/repo2`
+#> [1] "  main"   "* master" "  pr"
 
-checkout(c(repo_a, repo_b))
-
-# After
-git_branch(repo_a)
-#> [1] "pr"
-git_branch(repo_b)
-#> [1] "main"
+# Cleanup
+setwd(oldwd)
+repos %>% walk(unlink, recursive = TRUE)
 ```
-
-This behaviour is inspired by the `ref` argument of
-<https://github.com/actions/checkout> and helps work locally in a way
-similar to GitHub actions.

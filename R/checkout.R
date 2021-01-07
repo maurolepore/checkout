@@ -90,12 +90,17 @@ file_path <- function(path) {
 }
 
 checkout_default_branch <- function(repo) {
-  tryCatch(
-    walk_git(repo, "checkout -b main"),
-    error = function(e) {
-      walk_git(repo, "checkout -b master")
-    }
-  )
+  branches <- system(git_command(repo, "branch"), intern = TRUE)
+  checkout_default <- sprintf("checkout %s", get_default_branch(branches))
+  walk_git(repo, checkout_default)
 
   invisible(repo)
+}
+
+get_default_branch <- function(x) {
+  choices <- "^[*] main$|^[ ] main$|^[*] master$|^[ ] master$"
+
+  out <- grep(choices, x, value = TRUE)
+  out <- gsub("[* ]", "", out)
+  out
 }

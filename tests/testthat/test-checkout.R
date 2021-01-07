@@ -89,3 +89,27 @@ test_that("returns repos invisibly", {
 
   expect_invisible(checkout(path))
 })
+
+test_that("does not create two default branches but either main or master", {
+  # Setup two minimal repositories.
+  repos <- file.path(tempdir(), paste0("repo", 1:2))
+  repos %>% walk(dir.create)
+  on.exit(destroy(repos[[1]]), add = TRUE)
+  on.exit(destroy(repos[[2]]), add = TRUE)
+
+  repos %>% file.path("a-file.txt") %>% walk(file.create)
+  repos %>%
+    walk_git("init") %>%
+    walk_git("config user.name Jerry") %>%
+    walk_git("config user.email jerry@gmail.com") %>%
+    walk_git("add .") %>%
+    walk_git("commit -m 'New file'")
+
+  repos %>% map_git("branch")
+  checkout(repos)
+  out <- repos %>% map_git("branch")
+  only_1_default_branch <- all(
+    unlist(lapply(out, function(x) length(grepl("main|master", x)) == 1L))
+  )
+  expect_true(only_1_default_branch)
+})
