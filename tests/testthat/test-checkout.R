@@ -17,9 +17,8 @@ test_that("from inside the working directory, checkouts the current branch", {
 
   checkout(path)
   has_pr_branch <- any(grepl("* pr", map_git(path, "branch")))
-  expect_true(has_pr_branch)
 
-  setwd(oldwd)
+  expect_true(has_pr_branch)
 })
 
 test_that("checkouts the master branch of multiple repos", {
@@ -77,6 +76,7 @@ test_that("stays at the branch of repo if it's the wd", {
 
   at_main <- any(grepl("* main", out[[2]], fixed = TRUE))
   at_master <- any(grepl("* master", out[[2]], fixed = TRUE))
+
   expect_true(at_main || at_master)
 })
 
@@ -84,6 +84,7 @@ test_that("with uncommited changes throws an error", {
   path <- new_repo(temp_dir())
   on.exit(destroy(path), add = TRUE)
   writeLines("change but don't commit", file.path(path, "a"))
+
   expect_error(checkout(path), "uncommited changes")
 })
 
@@ -117,5 +118,6 @@ test_that("does not create two default branches but either main or master", {
   only_1_default_branch <- all(
     unlist(lapply(out, function(x) length(grepl("main|master", x)) == 1L))
   )
+
   expect_true(only_1_default_branch)
 })
