@@ -8,19 +8,20 @@ setup_one_repo <- function(path) {
     system("git init --initial-branch=main", intern = TRUE)
     system("git init --initial-branch=main", intern = TRUE)
 
-    unset <- function(command) {
-      browser()
-      status <- attributes(system(command, intern = TRUE))$status
+    git_error <- function(command) {
+      status <- attributes(system(command))$status
       is.null(status)
     }
 
-    name <- "git config --local global user.name"
-    set_name <- paste0(name, " jerry")
-    if (unset(name)) system(set_name, intern = TRUE)
+    name <- "git config user.name"
+    name_set <- paste0(name, " jerry")
+    name_unset <- git_error(name)
+    if (name_unset) system(name_set, intern = TRUE)
 
     mail <- "git config user.email"
-    set_main <- paste0(mail, " jerry@gmail.com")
-    if (unset(name)) system(set_mail, intern = TRUE)
+    mail_set <- paste0(mail, " jerry@gmail.com")
+    mail_unset <- git_error(name)
+    if (mail_unset) system(mail_set, intern = TRUE)
 
     system("git add .", intern = TRUE)
     system("git commit -m 'New file'", intern = TRUE)
