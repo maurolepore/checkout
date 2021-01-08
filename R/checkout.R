@@ -19,11 +19,12 @@
 #'
 #' # Setup two minimal repositories.
 #' repos <- file.path(tempdir(), paste0("repo", 1:2))
-#' repos
-#' repos %>% walk(dir.create)
 #' repos %>%
+#'   walk(dir.create) %>%
 #'   file.path("a-file.txt") %>%
-#'   walk(file.create)
+#'   walk(file.create) %>%
+#'   walk(function(x) writeLines("Some text", x))
+#'
 #' repos %>%
 #'   git("init --initial-branch=main") %>%
 #'   git("config user.name Jerry") %>%
@@ -33,7 +34,6 @@
 #'
 #' # If we set the directory at `repo1`, it stays at the branch `pr`, whereas the
 #' # `repo2` changes to the branch `master` (or `main`).
-#'
 #' oldwd <- getwd()
 #' setwd(repos[[1]])
 #'

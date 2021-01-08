@@ -1,7 +1,10 @@
 
 setup_one_repo <- function(path) {
   withr::with_dir(path, {
-    file.create(file.path(path, "a-file.txt"))
+    a_file <- file.path(path, "a-file.txt")
+    file.create(a_file)
+    writeLines("Some text", a_file)
+
     git(path, "init --initial-branch=main")
     git(path, "config user.name Jerry")
     git(path, "config user.email jerry@gmail.com")
