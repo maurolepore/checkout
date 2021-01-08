@@ -93,7 +93,7 @@ siblings() %>%
 current_branch <- "^[*] "
 siblings(self = TRUE) %>%
   # Returns a list of characters, which you can operate on
-  git_map("branch") %>% 
+  git_chr("branch") %>% 
   lapply(pick_pattern, current_branch)
 ```
 

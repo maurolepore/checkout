@@ -40,7 +40,7 @@ walk <- function(x, f, ...) {
 }
 ```
 
-`git()` and `git_map()` help you work with multiple Git
+`git()` and `git_chr()` help you work with multiple Git
 repositories at once. `git()` is primarily called for its side
 effects; here we use it to setup two minimal repositories.
 

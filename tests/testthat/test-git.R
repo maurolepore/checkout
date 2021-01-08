@@ -1,8 +1,8 @@
-test_that("git_map with a repo with clean status, shows 'nothing to commit'", {
+test_that("git_chr with a repo with clean status, shows 'nothing to commit'", {
   repo <- setup_repo(temp_dir())
   on.exit(destroy(repo), add = TRUE)
 
-  out <- git_map(repo, "status")
+  out <- git_chr(repo, "status")
   matches <- any(grepl("nothing to commit", out))
 
   expect_true(matches)

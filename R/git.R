@@ -65,16 +65,16 @@ git <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) {
 git_walk <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) {
   if (verbose) {
     print(
-      git_map(path = path, command = command, stop_on_error = stop_on_error, ...)
+      git_chr(path = path, command = command, stop_on_error = stop_on_error, ...)
     )
   } else {
-    git_map(path = path, command = command, stop_on_error = stop_on_error, ...)
+    git_chr(path = path, command = command, stop_on_error = stop_on_error, ...)
   }
 
   invisible(path)
 }
 
-git_map <- function(path, command, stop_on_error = TRUE, ...) {
+git_chr <- function(path, command, stop_on_error = TRUE, ...) {
   out <- lapply(
     path,
     function(x) {

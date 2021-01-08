@@ -73,7 +73,7 @@ stop_wip <- function(repo) {
 }
 
 has_uncommited_changes <- function(repo) {
-  status <- git_map(repo, "status")
+  status <- git_chr(repo, "status")
   clean <- any(grepl("nothing to commit", status))
   !clean
 }

@@ -13,7 +13,7 @@ test_that("from inside the working directory, checkouts the current branch", {
   setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
   checkout(repo)
-  has_pr_branch <- any(grepl("* pr", git_map(repo, "branch")))
+  has_pr_branch <- any(grepl("* pr", git_chr(repo, "branch")))
 
   expect_true(has_pr_branch)
 })
@@ -36,7 +36,7 @@ test_that("checkouts the master branch of multiple repos", {
     git("commit -m 'New file'")
 
   checkout(repos)
-  out <- repos %>% git_map("branch")
+  out <- repos %>% git_chr("branch")
   at_main <- all(grepl("* main", out, fixed = TRUE))
   at_master <- all(grepl("* master", out, fixed = TRUE))
 
@@ -89,9 +89,9 @@ test_that("does not create two default branches but either main or master", {
     git("add .") %>%
     git("commit -m 'New file'")
 
-  repos %>% git_map("branch")
+  repos %>% git_chr("branch")
   checkout(repos)
-  out <- repos %>% git_map("branch")
+  out <- repos %>% git_chr("branch")
   only_1_default_branch <- all(
     unlist(lapply(out, function(x) length(grepl("main|master", x)) == 1L))
   )
