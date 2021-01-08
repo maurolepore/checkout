@@ -59,8 +59,8 @@ StressTestingModelDev %>%
   git("commit -m 'Add some file with some text'") %>%
   # `verbose = TRUE` prints git's output to the console
   git("log --oneline --decorate -1", verbose = TRUE)
-#> $`/home/mauro/git/StressTestingModelDev`
-#> [1] "ebad263 (HEAD -> demo-pr) Add some file with some text"
+#> /home/mauro/git/StressTestingModelDev
+#> 03ef0df (HEAD -> demo-pr) Add some file with some text
 ```
 
 The other pacta siblings, say “pacta-data”, may be at a non-default
@@ -72,8 +72,9 @@ siblings() %>%
   pick_pattern("pacta-data") %>% 
   git("checkout -b wip") %>%
   git("branch", verbose = TRUE)
-#> $`/home/mauro/git/pacta-data`
-#> [1] "  master" "* wip"
+#> /home/mauro/git/pacta-data
+#>   master
+#> * wip
 ```
 
 `checkout()` helps you checkout the default branch of every repo –
@@ -91,6 +92,21 @@ StressTestingModelDev <- siblings() %>%
 setwd(StressTestingModelDev)
 siblings() %>% 
   checkout()
+#> 
+#> repo: 
+#>  /home/mauro/git/create_interactive_report
+#> wd: 
+#>  /home/mauro/git/StressTestingModelDev
+#> 
+#> repo: 
+#>  /home/mauro/git/PACTA_analysis
+#> wd: 
+#>  /home/mauro/git/StressTestingModelDev
+#> 
+#> repo: 
+#>  /home/mauro/git/pacta-data
+#> wd: 
+#>  /home/mauro/git/StressTestingModelDev
 
 current_branch <- "^[*] "
 siblings(self = TRUE) %>%
