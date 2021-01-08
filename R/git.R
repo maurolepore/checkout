@@ -22,6 +22,16 @@
 #'   invisible(x)
 #' }
 #'
+#' repo <- file.path(tempdir())
+#' dir.create(repo)
+#' on.exit(unlink(repo, recursive = TRUE), add = TRUE)
+#'
+#' # git() is a thin wrapper around `system("git -C <path> <command>", ...)`
+#' # It's fit for pipes
+#' repo %>%
+#'   git("init --initial-branch=trunk") %>%
+#'   git("branch")
+#'
 #' repos <- file.path(tempdir(), paste0("repo", 1:2))
 #' repos %>% walk(dir.create)
 #'
@@ -49,6 +59,11 @@
 #' # Cleanup
 #' walk(repos, unlink, recursive = TRUE)
 git <- function(path, command, stop_on_error = TRUE, ...) {
+  git_impl(path, command, stop_on_error = TRUE, ...)
+  invisible(path)
+}
+
+git_impl <- function(path, command, stop_on_error = TRUE, ...) {
   out <- suppressWarnings(
     system(git_command(path, command), intern = TRUE, ...)
   )
@@ -78,7 +93,7 @@ git_map <- function(path, command, stop_on_error = TRUE, ...) {
   out <- lapply(
     path,
     function(x) {
-      git(path = x, command = command, stop_on_error = stop_on_error, ...)
+      git_impl(path = x, command = command, stop_on_error = stop_on_error, ...)
     }
   )
 

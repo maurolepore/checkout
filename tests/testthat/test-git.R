@@ -1,4 +1,4 @@
-test_that("with a repo with clean status, shows 'nothing to commit'", {
+test_that("git_map with a repo with clean status, shows 'nothing to commit'", {
   repo <- setup_repo(temp_dir())
   on.exit(destroy(repo), add = TRUE)
 
