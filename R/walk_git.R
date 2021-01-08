@@ -78,7 +78,7 @@ git_impl <- function(path, command, stop_on_error, ...) {
   )
 
   if (stop_on_error && did_throw_error(out)) {
-    stop(out[[1]], call. = FALSE)
+    stop(out, call. = FALSE)
   }
 
   out
