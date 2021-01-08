@@ -1,16 +1,14 @@
 
 setup_one_repo <- function(path) {
-  oldwd <- getwd()
-  setwd(path)
-  on.exit(setwd(oldwd), add = TRUE)
-
-  file.create(file.path(path, "a-file.txt"))
-  git(path, "init --initial-branch=main")
-  git(path, "config user.name Jerry")
-  git(path, "config user.email jerry@gmail.com")
-  git(path, "add .")
-  git(path, "commit -m 'New file'")
-  git(path, "checkout -b pr")
+  withr::with_dir(path, {
+    file.create(file.path(path, "a-file.txt"))
+    git(path, "init --initial-branch=main")
+    git(path, "config user.name Jerry")
+    git(path, "config user.email jerry@gmail.com")
+    git(path, "add .")
+    git(path, "commit -m 'New file'")
+    git(path, "checkout -b pr")
+  })
 
   invisible(path)
 }
