@@ -85,8 +85,10 @@ has_uncommited_changes <- function(repo) {
 }
 
 file_path <- function(path) {
-  remake_path <- function(x) file.path(dirname(x), basename(x))
-  unlist(lapply(path, remake_path))
+  fs::path_sanitize(path)
+  # FIXME: Remove dead code
+  # remake_path <- function(x) file.path(dirname(x), basename(x))
+  # unlist(lapply(path, remake_path))
 }
 
 checkout_default_branch <- function(repo) {
