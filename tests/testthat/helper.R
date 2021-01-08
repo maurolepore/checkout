@@ -1,5 +1,5 @@
 new_repo <- function(path) {
-  path <- walk_git(path, "init")
+  path <- walk_git(path, "init --initial-branch=main")
 
   walk_git(path, "config user.name jerry")
   walk_git(path, "config user.email jerry@gmail.com")

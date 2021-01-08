@@ -17,6 +17,7 @@ map_git <- function(path, command, stop_on_error = TRUE, ...) {
   out
 }
 
+# FIXME: This is duplicated
 git_imp <- function(path, command, stop_on_error = TRUE, ...) {
   out <- system(
     git_command(path, command),

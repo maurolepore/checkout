@@ -79,6 +79,7 @@ git_impl <- function(path, command, stop_on_error = TRUE, ...) {
   )
 
   if (stop_on_error && is_git_error(out)) {
+    # FIXME?
     stop(out[[1]], call. = FALSE)
   }
 

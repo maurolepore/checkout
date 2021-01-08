@@ -25,7 +25,7 @@
 #'   file.path("a-file.txt") %>%
 #'   walk(file.create)
 #' repos %>%
-#'   walk_git("init") %>%
+#'   walk_git("init --initial-branch=main") %>%
 #'   walk_git("config user.name Jerry") %>%
 #'   walk_git("config user.email jerry@gmail.com") %>%
 #'   walk_git("add .") %>%

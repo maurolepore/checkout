@@ -32,7 +32,7 @@ test_that("checkouts the master branch of multiple repos", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    walk_git("init") %>%
+    walk_git("init --initial-branch=main") %>%
     walk_git("config user.name Jerry") %>%
     walk_git("config user.email jerry@gmail.com") %>%
     walk_git("add .") %>%
@@ -57,7 +57,7 @@ test_that("stays at the branch of repo if it's the wd", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    walk_git("init") %>%
+    walk_git("init --initial-branch=main") %>%
     walk_git("config user.name Jerry") %>%
     walk_git("config user.email jerry@gmail.com") %>%
     walk_git("add .") %>%
@@ -101,7 +101,7 @@ test_that("does not create two default branches but either main or master", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    walk_git("init") %>%
+    walk_git("init --initial-branch=main") %>%
     walk_git("config user.name Jerry") %>%
     walk_git("config user.email jerry@gmail.com") %>%
     walk_git("add .") %>%
