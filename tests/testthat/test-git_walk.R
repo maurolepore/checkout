@@ -2,7 +2,7 @@ test_that("with a repo with clean status, shows 'nothing to commit'", {
   repo <- setup_repo(temp_dir())
   on.exit(destroy(repo), add = TRUE)
 
-  out <- map_git(repo, "status")
+  out <- git_map(repo, "status")
   matches <- any(grepl("nothing to commit", out))
 
   expect_true(matches)
@@ -13,7 +13,7 @@ test_that("with a path that isn't a repo erorrs gracefully", {
   if (!dir.exists(not_repo)) dir.create(not_repo)
   on.exit(destroy(not_repo), add = TRUE)
 
-  expect_error(walk_git(not_repo, "status"), "not a git repository")
+  expect_error(git_walk(not_repo, "status"), "not a git repository")
 })
 
 test_that("is sensitive to stop_on_error", {
@@ -21,7 +21,7 @@ test_that("is sensitive to stop_on_error", {
   if (!dir.exists(not_repo)) dir.create(not_repo)
   on.exit(destroy(not_repo), add = TRUE)
 
-  expect_no_error(walk_git(not_repo, "status", stop_on_error = FALSE))
+  expect_no_error(git_walk(not_repo, "status", stop_on_error = FALSE))
 })
 
 test_that("is vectorized", {
@@ -31,7 +31,7 @@ test_that("is vectorized", {
   on.exit(destroy(path2), add = TRUE)
 
   paths <- c(path1, path2)
-  out <- walk_git(paths, "status")
+  out <- git_walk(paths, "status")
   expect_length(out, length(paths))
 })
 
@@ -39,16 +39,16 @@ test_that("returns invisible path", {
   repo <- setup_repo(temp_dir())
   on.exit(destroy(repo), add = TRUE)
 
-  expect_equal(walk_git(repo, "status"), repo)
-  expect_invisible(walk_git(repo, "status"))
+  expect_equal(git_walk(repo, "status"), repo)
+  expect_invisible(git_walk(repo, "status"))
 })
 
 test_that("is sensitive to verbose", {
   repo <- setup_repo(temp_dir())
   on.exit(destroy(repo))
 
-  x <- capture.output(walk_git(repo, "status", verbose = TRUE))
-  y <- capture.output(walk_git(repo, "status", verbose = FALSE))
+  x <- capture.output(git_walk(repo, "status", verbose = TRUE))
+  y <- capture.output(git_walk(repo, "status", verbose = FALSE))
 
   expect_false(identical(x, y))
   expect_true(length(x) > 0L)

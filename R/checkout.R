@@ -25,11 +25,11 @@
 #'   file.path("a-file.txt") %>%
 #'   walk(file.create)
 #' repos %>%
-#'   walk_git("init --initial-branch=main") %>%
-#'   walk_git("config user.name Jerry") %>%
-#'   walk_git("config user.email jerry@gmail.com") %>%
-#'   walk_git("add .") %>%
-#'   walk_git("commit -m 'New file'")
+#'   git_walk("init --initial-branch=main") %>%
+#'   git_walk("config user.name Jerry") %>%
+#'   git_walk("config user.email jerry@gmail.com") %>%
+#'   git_walk("add .") %>%
+#'   git_walk("commit -m 'New file'")
 #'
 #' # If we set the directory at `repo1`, it stays at the branch `pr`, whereas the
 #' # `repo2` changes to the branch `master` (or `main`).
@@ -37,12 +37,12 @@
 #' oldwd <- getwd()
 #' setwd(repos[[1]])
 #'
-#' repos %>% walk_git("checkout -b pr")
+#' repos %>% git_walk("checkout -b pr")
 #'
 #' # Compare before and after `checkout()`
-#' repos %>% walk_git("branch", verbose = TRUE)
+#' repos %>% git_walk("branch", verbose = TRUE)
 #' repos %>% checkout()
-#' repos %>% walk_git("branch", verbose = TRUE)
+#' repos %>% git_walk("branch", verbose = TRUE)
 #'
 #' # Cleanup
 #' setwd(oldwd)
@@ -73,7 +73,7 @@ stop_wip <- function(repo) {
 }
 
 has_uncommited_changes <- function(repo) {
-  status <- map_git(repo, "status")
+  status <- git_map(repo, "status")
   clean <- any(grepl("nothing to commit", status))
   !clean
 }
@@ -86,7 +86,7 @@ file_path <- function(path) {
 checkout_default_branch <- function(repo) {
   branches <- system(git_command(repo, "branch"), intern = TRUE)
   checkout_default <- sprintf("checkout %s", get_default_branch(branches))
-  walk_git(repo, checkout_default)
+  git_walk(repo, checkout_default)
 
   invisible(repo)
 }

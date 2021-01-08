@@ -40,8 +40,8 @@ walk <- function(x, f, ...) {
 }
 ```
 
-`walk_git()` and `map_git()` help you work with multiple Git
-repositories at once. `walk_git()` is primarily called for its side
+`git_walk()` and `git_map()` help you work with multiple Git
+repositories at once. `git_walk()` is primarily called for its side
 effects; here we use it to setup two minimal repositories.
 
 ``` r
@@ -52,13 +52,13 @@ repos
 #> [1] "/tmp/Rtmp5EiryS/repo1" "/tmp/Rtmp5EiryS/repo2"
 
 repos %>%
-  walk_git("init --initial-branch=main") %>%
-  walk_git("config user.name Jerry") %>%
-  walk_git("config user.email jerry@gmail.com") %>%
-  walk_git("add .") %>%
-  walk_git("commit -m 'Add a-file.txt'") %>%
+  git_walk("init --initial-branch=main") %>%
+  git_walk("config user.name Jerry") %>%
+  git_walk("config user.email jerry@gmail.com") %>%
+  git_walk("add .") %>%
+  git_walk("commit -m 'Add a-file.txt'") %>%
   # Each repo now has a commit
-  walk_git("log --oneline -n 1 --decorate", verbose = TRUE)
+  git_walk("log --oneline -n 1 --decorate", verbose = TRUE)
 #> $`/tmp/Rtmp5EiryS/repo1`
 #> [1] "0b72ce9 (HEAD -> main) Add a-file.txt"
 #> 
@@ -76,17 +76,17 @@ repos %>%
 oldwd <- getwd()
 setwd(repos[[1]])
 
-repos %>% walk_git("checkout -b pr")
+repos %>% git_walk("checkout -b pr")
 
 # Compare before and after `checkout()`
-repos %>% walk_git("branch", verbose = TRUE)
+repos %>% git_walk("branch", verbose = TRUE)
 #> $`/tmp/Rtmp5EiryS/repo1`
 #> [1] "  main" "* pr"  
 #> 
 #> $`/tmp/Rtmp5EiryS/repo2`
 #> [1] "  main" "* pr"
 repos %>% checkout()
-repos %>% walk_git("branch", verbose = TRUE)
+repos %>% git_walk("branch", verbose = TRUE)
 #> $`/tmp/Rtmp5EiryS/repo1`
 #> [1] "  main" "* pr"  
 #> 

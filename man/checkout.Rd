@@ -34,11 +34,11 @@ repos \%>\%
   file.path("a-file.txt") \%>\%
   walk(file.create)
 repos \%>\%
-  walk_git("init --initial-branch=main") \%>\%
-  walk_git("config user.name Jerry") \%>\%
-  walk_git("config user.email jerry@gmail.com") \%>\%
-  walk_git("add .") \%>\%
-  walk_git("commit -m 'New file'")
+  git_walk("init --initial-branch=main") \%>\%
+  git_walk("config user.name Jerry") \%>\%
+  git_walk("config user.email jerry@gmail.com") \%>\%
+  git_walk("add .") \%>\%
+  git_walk("commit -m 'New file'")
 
 # If we set the directory at `repo1`, it stays at the branch `pr`, whereas the
 # `repo2` changes to the branch `master` (or `main`).
@@ -46,12 +46,12 @@ repos \%>\%
 oldwd <- getwd()
 setwd(repos[[1]])
 
-repos \%>\% walk_git("checkout -b pr")
+repos \%>\% git_walk("checkout -b pr")
 
 # Compare before and after `checkout()`
-repos \%>\% walk_git("branch", verbose = TRUE)
+repos \%>\% git_walk("branch", verbose = TRUE)
 repos \%>\% checkout()
-repos \%>\% walk_git("branch", verbose = TRUE)
+repos \%>\% git_walk("branch", verbose = TRUE)
 
 # Cleanup
 setwd(oldwd)

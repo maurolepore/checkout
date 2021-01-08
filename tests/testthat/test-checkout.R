@@ -14,7 +14,7 @@ test_that("from inside the working directory, checkouts the current branch", {
   on.exit(setwd(oldwd), add = TRUE)
 
   checkout(repo)
-  has_pr_branch <- any(grepl("* pr", map_git(repo, "branch")))
+  has_pr_branch <- any(grepl("* pr", git_map(repo, "branch")))
 
   expect_true(has_pr_branch)
 })
@@ -30,14 +30,14 @@ test_that("checkouts the master branch of multiple repos", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    walk_git("init --initial-branch=main") %>%
-    walk_git("config user.name Jerry") %>%
-    walk_git("config user.email jerry@gmail.com") %>%
-    walk_git("add .") %>%
-    walk_git("commit -m 'New file'")
+    git_walk("init --initial-branch=main") %>%
+    git_walk("config user.name Jerry") %>%
+    git_walk("config user.email jerry@gmail.com") %>%
+    git_walk("add .") %>%
+    git_walk("commit -m 'New file'")
 
   checkout(repos)
-  out <- repos %>% map_git("branch")
+  out <- repos %>% git_map("branch")
   at_main <- all(grepl("* main", out, fixed = TRUE))
   at_master <- all(grepl("* master", out, fixed = TRUE))
 
@@ -84,15 +84,15 @@ test_that("does not create two default branches but either main or master", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    walk_git("init --initial-branch=main") %>%
-    walk_git("config user.name Jerry") %>%
-    walk_git("config user.email jerry@gmail.com") %>%
-    walk_git("add .") %>%
-    walk_git("commit -m 'New file'")
+    git_walk("init --initial-branch=main") %>%
+    git_walk("config user.name Jerry") %>%
+    git_walk("config user.email jerry@gmail.com") %>%
+    git_walk("add .") %>%
+    git_walk("commit -m 'New file'")
 
-  repos %>% map_git("branch")
+  repos %>% git_map("branch")
   checkout(repos)
-  out <- repos %>% map_git("branch")
+  out <- repos %>% git_map("branch")
   only_1_default_branch <- all(
     unlist(lapply(out, function(x) length(grepl("main|master", x)) == 1L))
   )

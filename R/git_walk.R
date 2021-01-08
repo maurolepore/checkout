@@ -8,7 +8,7 @@
 #' @param stop_on_error If Git fails, do you want an R error?
 #' @param ... Other arguments passed to [system].
 #'
-#' @return `walk_git()` is called for its side effect; it returns `path`
+#' @return `git_walk()` is called for its side effect; it returns `path`
 #'   invisibly.
 #'
 #' @export
@@ -27,40 +27,40 @@
 #'
 #' # Fails because the repo isn't initialized
 #' repos %>%
-#'   walk_git("status") %>%
+#'   git_walk("status") %>%
 #'   try()
 #'
 #' # Don't throw an error
 #' repos %>%
-#'   walk_git("status", stop_on_error = FALSE)
+#'   git_walk("status", stop_on_error = FALSE)
 #'
-#' repos %>% walk_git("init")
+#' repos %>% git_walk("init")
 #'
-#' repos %>% walk_git("status")
-#' repos %>% walk_git("status", verbose = TRUE)
+#' repos %>% git_walk("status")
+#' repos %>% git_walk("status", verbose = TRUE)
 #'
 #' repos %>%
-#'   walk_git("add .") %>%
-#'   walk_git("config user.name Jerry") %>%
-#'   walk_git("config user.email jerry@gmail.com") %>%
-#'   walk_git("commit -m 'Initialize' --allow-empty") %>%
-#'   walk_git("log --oneline -n 1", verbose = TRUE)
+#'   git_walk("add .") %>%
+#'   git_walk("config user.name Jerry") %>%
+#'   git_walk("config user.email jerry@gmail.com") %>%
+#'   git_walk("commit -m 'Initialize' --allow-empty") %>%
+#'   git_walk("log --oneline -n 1", verbose = TRUE)
 #'
 #' # Cleanup
 #' walk(repos, unlink, recursive = TRUE)
-walk_git <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) {
+git_walk <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) {
   if (verbose) {
     print(
-      map_git(path = path, command = command, stop_on_error = stop_on_error, ...)
+      git_map(path = path, command = command, stop_on_error = stop_on_error, ...)
     )
   } else {
-    map_git(path = path, command = command, stop_on_error = stop_on_error, ...)
+    git_map(path = path, command = command, stop_on_error = stop_on_error, ...)
   }
 
   invisible(path)
 }
 
-map_git <- function(path, command, stop_on_error = TRUE, ...) {
+git_map <- function(path, command, stop_on_error = TRUE, ...) {
   out <- lapply(
     path,
     function(x) {
