@@ -64,7 +64,7 @@ map_git <- function(path, command, stop_on_error = TRUE, ...) {
   out <- lapply(
     path,
     function(x) {
-      git_impl(path = x, command = command, stop_on_error = stop_on_error, ...)
+      git(path = x, command = command, stop_on_error = stop_on_error, ...)
     }
   )
 
@@ -72,7 +72,7 @@ map_git <- function(path, command, stop_on_error = TRUE, ...) {
   out
 }
 
-git_impl <- function(path, command, stop_on_error, ...) {
+git <- function(path, command, stop_on_error = TRUE, ...) {
   out <- suppressWarnings(
     system(git_command(path, command), intern = TRUE, ...)
   )
