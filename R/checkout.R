@@ -55,10 +55,11 @@ checkout <- function(repos) {
 checkout_repo <- function(repo) {
   stop_wip(repo)
 
+  # FIXME
   cat("\n")
-  cat("repo: ", file_path(repo))
+  cat("repo: \n", file_path(repo))
   cat("\n")
-  cat("wd: ", file_path(getwd()))
+  cat("wd: \n", file_path(getwd()))
   cat("\n")
 
   if (file_path(repo) == file_path(getwd())) {
@@ -85,10 +86,7 @@ has_uncommited_changes <- function(repo) {
 }
 
 file_path <- function(path) {
-  fs::path_sanitize(path)
-  # FIXME: Remove dead code
-  # remake_path <- function(x) file.path(dirname(x), basename(x))
-  # unlist(lapply(path, remake_path))
+  normalizePath(path)
 }
 
 checkout_default_branch <- function(repo) {

@@ -48,11 +48,10 @@ test_that("stays at the branch of repo if it's the wd", {
   setup_repo(repo)
   on.exit(destroy(repo), add = TRUE)
 
-  withr::local_dir(repo)
-  out <- git(repo, "checkout pr")
-  checkout(repo)
-
+  git(repo, "checkout pr")
+  withr::with_dir(repo, checkout(repo))
   out <- unname(unlist(git_chr(repo, "branch")))
+
   expect_equal(out, c("  main", "* pr"))
 })
 
