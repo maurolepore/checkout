@@ -69,9 +69,22 @@ git_walk <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) 
   lines <- git_chr(
     path = path, command = command, stop_on_error = stop_on_error, ...
   )
-  if (verbose) lapply(lines, writeLines)
+
+  if (verbose) show(lines)
 
   invisible(path)
+}
+
+show <- function(x) {
+  stopifnot(is.list(x))
+
+  for (i in seq_along(x)) {
+    writeLines(names(x[i]))
+    lapply(x[i], writeLines)
+    cat("\n")
+  }
+
+  invisible(x)
 }
 
 #' @export
