@@ -71,13 +71,8 @@ test_that("stays at the branch of repo if it's the wd", {
   checkout(repos)
   out <- repos %>% map_git("branch")
 
-  at_pr <- any(grepl("* pr", out[[1]], fixed = TRUE))
-  expect_true(at_pr)
-
-  at_main <- any(grepl("* main", out[[2]], fixed = TRUE))
-  at_master <- any(grepl("* master", out[[2]], fixed = TRUE))
-
-  expect_true(at_main || at_master)
+  expect_equal(out[[1]], c("  main", "* pr"))
+  expect_equal(out[[2]], c("* main", "  pr"))
 })
 
 test_that("with uncommited changes throws an error", {
