@@ -73,12 +73,19 @@ map_git <- function(path, command, stop_on_error = TRUE, ...) {
 }
 
 
-git_impl <- function(path, command, stop_on_error = TRUE, ...) {
+git_impl <- function(path, command, stop_on_error, ...) {
   out <- suppressWarnings(
     system(git_command(path, command), intern = TRUE, ...)
   )
 
+  is_git_error <- function(out) {
+    status <- attributes(out)$status
+    !is.null(status) && status > 0L
+  }
+
+  # is_git_error <- out > 0L
   if (stop_on_error && is_git_error(out)) {
+  # if (stop_on_error && is_git_error) {
     # FIXME?
     stop(out[[1]], call. = FALSE)
   }

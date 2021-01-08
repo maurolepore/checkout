@@ -64,17 +64,6 @@ checkout_repo <- function(repo) {
   invisible(repo)
 }
 
-# FIXME DRY
-is_git_error <- function(x) {
-  status <- attributes(x)$status
-  !is.null(status) && status > 0L
-}
-
-# is_git_error <- function(repo) {
-#   command <- sprintf("git -C %s status", repo)
-#   system(command) > 0L
-# }
-
 stop_wip <- function(repo) {
   if (has_uncommited_changes(repo)) {
     stop("`repo` must not have uncommited changes: ", repo, call. = FALSE)
