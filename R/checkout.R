@@ -64,14 +64,26 @@ checkout_repo <- function(repo) {
   invisible(repo)
 }
 
+# FIXME DRY
+is_git_error <- function(x) {
+  status <- attributes(x)$status
+  !is.null(status) && status > 0L
+}
+
+# is_git_error <- function(repo) {
+#   command <- sprintf("git -C %s status", repo)
+#   system(command) > 0L
+# }
+
 check_checkout <- function(repo) {
   stopifnot(length(repo) == 1)
 
-
-  if (is_git_error(walk_git(repo, "status"))) {
-    stop("`repo` must be a git repository. Did you forget to initialize it?")
-  }
-
+  tryCatch(
+    walk_git(repo, "status", stop_on_error = TRUE),
+    error = function(e) {
+      stop("`repo` must be a git repository. Did you forget to initialize it?")
+    }
+  )
 
   if (has_uncommited_changes(repo)) {
     stop("`repo` must not have uncommited changes: ", repo, call. = FALSE)

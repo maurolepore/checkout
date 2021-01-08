@@ -2,7 +2,9 @@ test_that("with a non-repo errors gracefully", {
   non_repo <- temp_dir()
   on.exit(destroy(non_repo), add = TRUE)
 
-  expect_error(checkout(non_repo), "not.*repo")
+  expect_error(walk_git(non_repo, "status"))
+  expect_no_error(walk_git(non_repo, "status", stop_on_error = FALSE))
+  expect_error(checkout(non_repo), "must be a git repo")
 })
 
 test_that("from inside the working directory, checkouts the current branch", {

@@ -89,8 +89,3 @@ git_impl <- function(path, command, stop_on_error = TRUE, ...) {
 git_command <- function(path, command) {
   sprintf("git -C %s %s 2>&1", path, command)
 }
-
-is_git_error <- function(out) {
-  status <- attributes(out)$status
-  !is.null(status) && status > 0L
-}
