@@ -60,12 +60,12 @@ StressTestingModelDev %>%
   # `verbose = TRUE` prints git's output to the console
   git("log --oneline --decorate -1", verbose = TRUE)
 #> $`/home/mauro/git/StressTestingModelDev`
-#> [1] "19f6848 (HEAD -> demo-pr) Add some file with some text"
+#> [1] "ebad263 (HEAD -> demo-pr) Add some file with some text"
 ```
 
 The other pacta siblings, say “pacta-data”, may be at a non-default
-branch. Now it makes more sense to use `git()` because it allows us
-to work work with multiple repos at once.
+branch. Now it makes more sense to use `git()` because it allows us to
+work work with multiple repos at once.
 
 ``` r
 siblings() %>% 
@@ -94,7 +94,7 @@ siblings() %>%
 
 current_branch <- "^[*] "
 siblings(self = TRUE) %>%
-  # Returns a list of characters, which you can operate on
+  # git_chr() is not pipe-able; it returns Git's output as a list of characters
   git_chr("branch") %>% 
   lapply(pick_pattern, current_branch)
 #> $`/home/mauro/git/create_interactive_report`
