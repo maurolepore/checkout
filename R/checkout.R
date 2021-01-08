@@ -31,19 +31,16 @@
 #'
 #' # If we set the directory at `repo1`, it stays at the branch `pr`, whereas the
 #' # `repo2` changes to the branch `master` (or `main`).
-#' oldwd <- getwd()
-#' setwd(repos[[1]])
+#' withr::with_dir(repos[[1]], {
+#'   repos %>% git("checkout -b pr")
+#'   # Compare before and after `checkout()`
+#'   # Before checkout(), both repos are at the branch pr
+#'   repos %>% git("branch", verbose = TRUE)
+#'   repos %>% checkout()
+#'   # After checkout(), the repo1 is at the branch pr and repo2 is at main
+#'   repos %>% git("branch", verbose = TRUE)
+#' })
 #'
-#' repos %>% git("checkout -b pr")
-#'
-#' # Compare before and after `checkout()`
-#' repos %>% git("branch", verbose = TRUE)
-#' repos %>% checkout()
-#' repos %>% git("branch", verbose = TRUE)
-#'
-#' # Cleanup
-#' setwd(oldwd)
-#' # Cleanup
 #' walk(repos, unlink, recursive = TRUE)
 checkout <- function(repos) {
   unlist(lapply(repos, checkout_repo))
