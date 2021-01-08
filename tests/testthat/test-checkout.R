@@ -47,32 +47,25 @@ test_that("checkouts the master branch of multiple repos", {
 })
 
 test_that("stays at the branch of repo if it's the wd", {
-  # Setup two minimal repositories.
-  repos <- file.path(tempdir(), paste0("repo", 1:2))
-  repos %>% walk(dir.create)
-  on.exit(destroy(repos[[1]]), add = TRUE)
-  on.exit(destroy(repos[[2]]), add = TRUE)
-
-  repos %>%
-    file.path("a-file.txt") %>%
-    walk(file.create)
-  repos %>%
-    walk_git("init --initial-branch=main") %>%
-    walk_git("config user.name Jerry") %>%
-    walk_git("config user.email jerry@gmail.com") %>%
-    walk_git("add .") %>%
-    walk_git("commit -m 'New file'")
+  repo <- temp_dir()
+  if (!dir.exists(repo)) dir.create(repo)
+  on.exit(destroy(repo), add = TRUE)
 
   oldwd <- getwd()
-  setwd(repos[[1]])
+  setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
 
-  repos %>% walk_git("checkout -b pr")
-  checkout(repos)
-  out <- repos %>% map_git("branch")
+  file.create(file.path(repo, "a-file.txt"))
+  system("git init --initial-branch=main", intern = TRUE)
+  system("git config user.name Jerry")
+  system("git config user.email jerry@gmail.com")
+  system("git add .")
+  system("git commit -m 'New file'", intern = TRUE)
+  system("git checkout -b pr")
 
-  expect_equal(out[[1]], c("  main", "* pr"))
-  expect_equal(out[[2]], c("* main", "  pr"))
+  checkout(repo)
+  out <- git_impl(repo, "branch", stop_on_error = TRUE)
+  expect_equal(out, c("  main", "* pr"))
 })
 
 test_that("with uncommited changes throws an error", {
