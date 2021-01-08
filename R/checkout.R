@@ -53,7 +53,7 @@ checkout <- function(repos) {
 }
 
 checkout_repo <- function(repo) {
-  check_checkout(repo)
+  stop_wip(repo)
 
   if (file_path(repo) == file_path(getwd())) {
     return(invisible(repo))
@@ -75,16 +75,7 @@ is_git_error <- function(x) {
 #   system(command) > 0L
 # }
 
-check_checkout <- function(repo) {
-  stopifnot(length(repo) == 1)
-
-  tryCatch(
-    walk_git(repo, "status", stop_on_error = TRUE),
-    error = function(e) {
-      stop("`repo` must be a git repository. Did you forget to initialize it?")
-    }
-  )
-
+stop_wip <- function(repo) {
   if (has_uncommited_changes(repo)) {
     stop("`repo` must not have uncommited changes: ", repo, call. = FALSE)
   }

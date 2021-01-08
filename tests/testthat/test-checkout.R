@@ -4,7 +4,7 @@ test_that("with a non-repo errors gracefully", {
 
   expect_error(walk_git(non_repo, "status"))
   expect_no_error(walk_git(non_repo, "status", stop_on_error = FALSE))
-  expect_error(checkout(non_repo), "must be a git repo")
+  expect_error(checkout(non_repo), "not a git repo")
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
