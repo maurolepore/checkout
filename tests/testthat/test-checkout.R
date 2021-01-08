@@ -48,20 +48,12 @@ test_that("checkouts the master branch of multiple repos", {
 
 test_that("stays at the branch of repo if it's the wd", {
   repo <- temp_dir()
-  if (!dir.exists(repo)) dir.create(repo)
+  setup_repo(repo)
   on.exit(destroy(repo), add = TRUE)
 
   oldwd <- getwd()
   setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
-
-  file.create(file.path(repo, "a-file.txt"))
-  system("git init --initial-branch=main", intern = TRUE)
-  system("git config user.name Jerry")
-  system("git config user.email jerry@gmail.com")
-  system("git add .")
-  system("git commit -m 'New file'", intern = TRUE)
-  system("git checkout -b pr")
 
   checkout(repo)
   out <- git_impl(repo, "branch", stop_on_error = TRUE)
