@@ -6,17 +6,15 @@ test_that("with a non-repo errors gracefully", {
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
-  path <- new_repo(temp_dir())
-  on.exit(destroy(path), add = TRUE)
-
-  walk_git(path, "checkout -b pr")
+  repo <- setup_repo(temp_dir())
+  on.exit(destroy(repo), add = TRUE)
 
   oldwd <- getwd()
-  setwd(path)
+  setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
 
-  checkout(path)
-  has_pr_branch <- any(grepl("* pr", map_git(path, "branch")))
+  checkout(repo)
+  has_pr_branch <- any(grepl("* pr", map_git(repo, "branch")))
 
   expect_true(has_pr_branch)
 })
@@ -61,18 +59,18 @@ test_that("stays at the branch of repo if it's the wd", {
 })
 
 test_that("with uncommited changes throws an error", {
-  path <- new_repo(temp_dir())
-  on.exit(destroy(path), add = TRUE)
-  writeLines("change but don't commit", file.path(path, "a"))
+  repo <- setup_repo(temp_dir())
+  on.exit(destroy(repo), add = TRUE)
+  writeLines("change but don't commit", file.path(repo, "a"))
 
-  expect_error(checkout(path), "uncommited changes")
+  expect_error(checkout(repo), "uncommited changes")
 })
 
 test_that("returns repos invisibly", {
-  path <- new_repo(temp_dir())
-  on.exit(destroy(path), add = TRUE)
+  repo <- setup_repo(temp_dir())
+  on.exit(destroy(repo), add = TRUE)
 
-  expect_invisible(checkout(path))
+  expect_invisible(checkout(repo))
 })
 
 test_that("does not create two default branches but either main or master", {
