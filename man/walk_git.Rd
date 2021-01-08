@@ -55,6 +55,8 @@ repos \%>\% walk_git("status", verbose = TRUE)
 
 repos \%>\%
   walk_git("add .") \%>\%
+  walk_git("config user.name Jerry") \%>\%
+  walk_git("config user.email jerry@gmail.com") \%>\%
   walk_git("commit -m 'Initialize' --allow-empty") \%>\%
   walk_git("log --oneline -n 1", verbose = TRUE)
 
