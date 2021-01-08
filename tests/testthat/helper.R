@@ -6,9 +6,11 @@ setup_one_repo <- function(path) {
     writeLines("Some text", a_file)
 
     system("git init --initial-branch=main", intern = TRUE)
+
     name <- "git config user.name"
     name_set <- paste0(name, " jerry")
     name_unset <- git_error(name)
+
     if (name_unset) system(name_set, intern = TRUE)
     mail <- "git config user.email"
     mail_set <- paste0(mail, " jerry@gmail.com")
@@ -17,14 +19,15 @@ setup_one_repo <- function(path) {
 
     system("git add .", intern = TRUE)
     system("git commit -m 'New file'", intern = TRUE)
-    system("git checkout -b pr", intern = TRUE)
+    system("git checkout -b pr", intern = TRUE, ignore.stderr = TRUE)
+
   })
 
   invisible(path)
 }
 
-git_error <- function(command) {
-  status <- attributes(system(command, intern = TRUE))$status
+git_error <- function(x) {
+  status <- attributes(system(x, intern = TRUE))$status
   is.null(status)
 }
 

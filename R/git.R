@@ -102,7 +102,7 @@ git_chr <- function(path, command, stop_on_error = TRUE, ...) {
 
 git_impl <- function(path, command, stop_on_error = TRUE, ...) {
   out <- suppressWarnings(
-    system(git_command(path, command), intern = TRUE, ...)
+    system(path_command(path, command), intern = TRUE, ...)
   )
 
   if (stop_on_error && did_throw_error(out)) {
@@ -117,6 +117,6 @@ did_throw_error <- function(x) {
   !is.null(status) && status > 0L
 }
 
-git_command <- function(path, command) {
+path_command <- function(path, command) {
   sprintf("git -C %s %s 2>&1", path, command)
 }

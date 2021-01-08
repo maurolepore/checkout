@@ -85,7 +85,7 @@ file_path <- function(path) {
 }
 
 checkout_default_branch <- function(repo) {
-  branches <- system(git_command(repo, "branch"), intern = TRUE)
+  branches <- system(path_command(repo, "branch"), intern = TRUE)
   checkout_default <- sprintf("checkout %s", get_default_branch(branches))
   git(repo, checkout_default)
 
