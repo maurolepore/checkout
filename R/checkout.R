@@ -55,6 +55,12 @@ checkout <- function(repos) {
 checkout_repo <- function(repo) {
   stop_wip(repo)
 
+  cat("\n")
+  cat("repo: ", file_path(repo))
+  cat("\n")
+  cat("wd: ", file_path(getwd()))
+  cat("\n")
+
   if (file_path(repo) == file_path(getwd())) {
     return(invisible(repo))
   } else {
