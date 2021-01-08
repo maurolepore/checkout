@@ -2,4 +2,3 @@
 
 export(checkout)
 export(git)
-export(git_walk)

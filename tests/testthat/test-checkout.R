@@ -29,11 +29,11 @@ test_that("checkouts the master branch of multiple repos", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    git_walk("init --initial-branch=main") %>%
-    git_walk("config user.name Jerry") %>%
-    git_walk("config user.email jerry@gmail.com") %>%
-    git_walk("add .") %>%
-    git_walk("commit -m 'New file'")
+    git("init --initial-branch=main") %>%
+    git("config user.name Jerry") %>%
+    git("config user.email jerry@gmail.com") %>%
+    git("add .") %>%
+    git("commit -m 'New file'")
 
   checkout(repos)
   out <- repos %>% git_map("branch")
@@ -83,11 +83,11 @@ test_that("does not create two default branches but either main or master", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    git_walk("init --initial-branch=main") %>%
-    git_walk("config user.name Jerry") %>%
-    git_walk("config user.email jerry@gmail.com") %>%
-    git_walk("add .") %>%
-    git_walk("commit -m 'New file'")
+    git("init --initial-branch=main") %>%
+    git("config user.name Jerry") %>%
+    git("config user.email jerry@gmail.com") %>%
+    git("add .") %>%
+    git("commit -m 'New file'")
 
   repos %>% git_map("branch")
   checkout(repos)

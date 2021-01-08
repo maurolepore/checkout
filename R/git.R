@@ -8,7 +8,7 @@
 #' @param stop_on_error If Git fails, do you want an R error?
 #' @param ... Other arguments passed to [system].
 #'
-#' @return `git_walk()` is called for its side effect; it returns `path`
+#' @return `git()` is called for its side effect; it returns `path`
 #'   invisibly.
 #'
 #' @export
@@ -37,24 +37,24 @@
 #'
 #' # Fails because the repo isn't initialized
 #' repos %>%
-#'   git_walk("status") %>%
+#'   git("status") %>%
 #'   try()
 #'
 #' # Don't throw an error
 #' repos %>%
-#'   git_walk("status", stop_on_error = FALSE)
+#'   git("status", stop_on_error = FALSE)
 #'
-#' repos %>% git_walk("init")
+#' repos %>% git("init")
 #'
-#' repos %>% git_walk("status")
-#' repos %>% git_walk("status", verbose = TRUE)
+#' repos %>% git("status")
+#' repos %>% git("status", verbose = TRUE)
 #'
 #' repos %>%
-#'   git_walk("add .") %>%
-#'   git_walk("config user.name Jerry") %>%
-#'   git_walk("config user.email jerry@gmail.com") %>%
-#'   git_walk("commit -m 'Initialize' --allow-empty") %>%
-#'   git_walk("log --oneline -n 1", verbose = TRUE)
+#'   git("add .") %>%
+#'   git("config user.name Jerry") %>%
+#'   git("config user.email jerry@gmail.com") %>%
+#'   git("commit -m 'Initialize' --allow-empty") %>%
+#'   git("log --oneline -n 1", verbose = TRUE)
 #'
 #' # Cleanup
 #' walk(repos, unlink, recursive = TRUE)

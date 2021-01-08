@@ -37,7 +37,7 @@ siblings()
 ```
 
 Let’s do some work in “StressTestingModelDev/”. We could use `git` from
-the terminal but here we’ll show off `git_walk()`; it is a thin wrapper
+the terminal but here we’ll show off `git()`; it is a thin wrapper
 around `system("git -C <path> ...")`. Here we create and checkout a new
 branch “demo-pr”; modify and commit a new file; and inspect the
 `git log`.
@@ -49,29 +49,29 @@ StressTestingModelDev <- siblings() %>%
 setwd(StressTestingModelDev)
 
 StressTestingModelDev %>% 
-  git_walk("checkout -b demo-pr")
+  git("checkout -b demo-pr")
 
 # Make some change so we have something to commit
 writeLines("Some text", file.path(StressTestingModelDev, "some-file.txt"))
 
 StressTestingModelDev %>% 
-  git_walk("add .") %>% 
-  git_walk("commit -m 'Add some file with some text'") %>%
+  git("add .") %>% 
+  git("commit -m 'Add some file with some text'") %>%
   # `verbose = TRUE` prints git's output to the console
-  git_walk("log --oneline --decorate -1", verbose = TRUE)
+  git("log --oneline --decorate -1", verbose = TRUE)
 #> $`/home/mauro/git/StressTestingModelDev`
 #> [1] "19f6848 (HEAD -> demo-pr) Add some file with some text"
 ```
 
 The other pacta siblings, say “pacta-data”, may be at a non-default
-branch. Now it makes more sense to use `git_walk()` because it allows us
+branch. Now it makes more sense to use `git()` because it allows us
 to work work with multiple repos at once.
 
 ``` r
 siblings() %>% 
   pick_pattern("pacta-data") %>% 
-  git_walk("checkout -b wip") %>%
-  git_walk("branch", verbose = TRUE)
+  git("checkout -b wip") %>%
+  git("branch", verbose = TRUE)
 #> $`/home/mauro/git/pacta-data`
 #> [1] "  master" "* wip"
 ```
@@ -131,11 +131,11 @@ Cleanup.
 ``` r
 siblings() %>% 
   pick_pattern("pacta-data") %>% 
-  git_walk("checkout master") %>% 
-  git_walk("branch -D wip")
+  git("checkout master") %>% 
+  git("branch -D wip")
 
 siblings() %>% 
   pick_pattern("StressTestingModelDev") %>% 
-  git_walk("checkout master") %>% 
-  git_walk("branch -D demo-pr")
+  git("checkout master") %>% 
+  git("branch -D demo-pr")
 ```
