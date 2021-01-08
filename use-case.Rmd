@@ -92,7 +92,7 @@ siblings() %>%
 
 current_branch <- "^[*] "
 siblings(self = TRUE) %>%
-  # Returns a list of characters, which you can operate on
+  # git_chr() is not pipe-able; it returns Git's output as a list of characters
   git_chr("branch") %>% 
   lapply(pick_pattern, current_branch)
 ```

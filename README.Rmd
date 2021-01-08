@@ -49,9 +49,9 @@ walk <- function(x, f, ...) {
 }
 ```
 
-`git()` and `git_chr()` help you work with multiple Git repositories at
-once. `git()` is primarily called for its side effects; here we use it to
-setup two minimal repositories.
+`git()` helps you work with multiple Git repositories at once. `git()` is
+primarily called for its side effects; here we use it to setup two minimal
+repositories.
 
 ```{r}
 repos <- file.path(tempdir(), paste0("repo", 1:2))

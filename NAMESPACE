@@ -2,3 +2,4 @@
 
 export(checkout)
 export(git)
+export(git_chr)

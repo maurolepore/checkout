@@ -1,6 +1,9 @@
 #' Pipe-able, vectorized, and lightweight implementation of git in R
 #'
-#' Apply a Git command to each `path`.
+#' Apply a Git command to each `path`:
+#'
+#' * `git()` is pipe-able. It's called for its side effect.
+#' * `git_chr()` Is not pipe-able. It's called to compute on Git's text-output.
 #'
 #' @param path Path to one or multiple Git repos.
 #' @param command A Git command, e.g. "status" or "log --oneline -n 1".
@@ -9,7 +12,8 @@
 #' @param ... Other arguments passed to [system].
 #'
 #' @return `git()` is called for its side effect; it returns `path`
-#'   invisibly.
+#'   invisibly. `git_chr()` returns a list of characters containing the text
+#'   that Git outputs.
 #'
 #' @export
 #'
@@ -74,6 +78,8 @@ git_walk <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) 
   invisible(path)
 }
 
+#' @export
+#' @rdname git
 git_chr <- function(path, command, stop_on_error = TRUE, ...) {
   out <- lapply(
     path,

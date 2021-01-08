@@ -2,9 +2,12 @@
 % Please edit documentation in R/git.R
 \name{git}
 \alias{git}
+\alias{git_chr}
 \title{Pipe-able, vectorized, and lightweight implementation of git in R}
 \usage{
 git(path, command, verbose = FALSE, stop_on_error = TRUE, ...)
+
+git_chr(path, command, stop_on_error = TRUE, ...)
 }
 \arguments{
 \item{path}{Path to one or multiple Git repos.}
@@ -19,10 +22,17 @@ git(path, command, verbose = FALSE, stop_on_error = TRUE, ...)
 }
 \value{
 \code{git()} is called for its side effect; it returns \code{path}
-invisibly.
+invisibly. \code{git_chr()} returns a list of characters containing the text
+that Git outputs.
 }
 \description{
-Apply a Git command to each \code{path}.
+Apply a Git command to each \code{path}:
+}
+\details{
+\itemize{
+\item \code{git()} is pipe-able. It's called for its side effect.
+\item \code{git_chr()} Is not pipe-able. It's called to compute on Git's text-output.
+}
 }
 \examples{
 library(magrittr)
