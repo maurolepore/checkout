@@ -3,6 +3,8 @@ walk_git <- function(path, command, stop_on_error = TRUE, ...) {
   invisible(path)
 }
 
+#' @export
+#' @rdname walk_git
 map_git <- function(path, command, stop_on_error = TRUE, ...) {
   out <- lapply(
     path,

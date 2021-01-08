@@ -40,15 +40,16 @@ walk <- function(x, f, ...) {
 }
 ```
 
--   `walk_git()` helps work with multiple Git repositories at once. Here
-    we use it to setup two minimal repositories.
+`walk_git()` and `map_git()` help you work with multiple Git
+repositories at once. `walk_git()` is primarily called for its side
+effects; here we use it to setup two minimal repositories.
 
 ``` r
 repos <- file.path(tempdir(), paste0("repo", 1:2))
 repos %>% walk(dir.create)
 repos %>% file.path("a-file.txt") %>% walk(file.create)
 repos
-#> [1] "/tmp/RtmpK9RbPy/repo1" "/tmp/RtmpK9RbPy/repo2"
+#> [1] "/tmp/RtmpOKpX66/repo1" "/tmp/RtmpOKpX66/repo2"
 
 repos %>%
   walk_git("init") %>%
@@ -58,11 +59,11 @@ repos %>%
   walk_git("commit -m 'Add a-file.txt'") %>%
   # Each repo now has a commit
   walk_git("log --oneline -n 1 --decorate", verbose = TRUE)
-#> $`/tmp/RtmpK9RbPy/repo1`
-#> [1] "9767b8f (HEAD -> main) Add a-file.txt"
+#> $`/tmp/RtmpOKpX66/repo1`
+#> [1] "acd4654 (HEAD -> main) Add a-file.txt"
 #> 
-#> $`/tmp/RtmpK9RbPy/repo2`
-#> [1] "9767b8f (HEAD -> main) Add a-file.txt"
+#> $`/tmp/RtmpOKpX66/repo2`
+#> [1] "acd4654 (HEAD -> main) Add a-file.txt"
 ```
 
 -   `checkout()` is inspired by the `ref` argument of
@@ -79,17 +80,17 @@ repos %>% walk_git("checkout -b pr")
 
 # Compare before and after `checkout()`
 repos %>% walk_git("branch", verbose = TRUE)
-#> $`/tmp/RtmpK9RbPy/repo1`
+#> $`/tmp/RtmpOKpX66/repo1`
 #> [1] "  main" "* pr"  
 #> 
-#> $`/tmp/RtmpK9RbPy/repo2`
+#> $`/tmp/RtmpOKpX66/repo2`
 #> [1] "  main" "* pr"
 repos %>% checkout()
 repos %>% walk_git("branch", verbose = TRUE)
-#> $`/tmp/RtmpK9RbPy/repo1`
+#> $`/tmp/RtmpOKpX66/repo1`
 #> [1] "  main" "* pr"  
 #> 
-#> $`/tmp/RtmpK9RbPy/repo2`
+#> $`/tmp/RtmpOKpX66/repo2`
 #> [1] "* main" "  pr"
 
 # Cleanup

@@ -49,8 +49,9 @@ walk <- function(x, f, ...) {
 }
 ```
 
-* `walk_git()` helps work with multiple Git repositories at once. Here we use it
-to setup two minimal repositories.
+`walk_git()` and `map_git()` help you work with multiple Git repositories at
+once. `walk_git()` is primarily called for its side effects; here we use it to
+setup two minimal repositories.
 
 ```{r}
 repos <- file.path(tempdir(), paste0("repo", 1:2))

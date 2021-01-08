@@ -22,7 +22,8 @@ BugReports: https://github.com/maurolepore/checkout/issues
 Suggests: 
     covr,
     magrittr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    rmarkdown
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
