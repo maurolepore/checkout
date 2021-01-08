@@ -12,7 +12,6 @@ test_that("from inside the working directory, checkouts the current branch", {
   oldwd <- getwd()
   setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
-
   checkout(repo)
   has_pr_branch <- any(grepl("* pr", git_map(repo, "branch")))
 

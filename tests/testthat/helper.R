@@ -5,12 +5,14 @@ setup_one_repo <- function(path) {
   on.exit(setwd(oldwd), add = TRUE)
 
   file.create(file.path(path, "a-file.txt"))
-  system("git init --initial-branch=main", intern = TRUE)
-  system("git config user.name Jerry")
-  system("git config user.email jerry@gmail.com")
-  system("git add .")
-  system("git commit -m 'New file'", intern = TRUE)
-  system("git checkout -b pr")
+  git(path, "init --initial-branch=main")
+  git(path, "config user.name Jerry")
+  git(path, "config user.email jerry@gmail.com")
+  git(path, "add .")
+  git(path, "commit -m 'New file'")
+  git(path, "checkout -b pr")
+
+  invisible(path)
 }
 
 setup_repo <- function(path) {
