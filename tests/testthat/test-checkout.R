@@ -48,10 +48,7 @@ test_that("stays at the branch of repo if it's the wd", {
   setup_repo(repo)
   on.exit(destroy(repo), add = TRUE)
 
-  oldwd <- getwd()
-  setwd(repo)
-  on.exit(setwd(oldwd), add = TRUE)
-
+  withr::local_dir(repo)
   out <- git(repo, "checkout pr")
   checkout(repo)
 

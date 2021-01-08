@@ -20,7 +20,8 @@ License: MIT + file LICENSE
 URL: https://github.com/maurolepore/checkout
 BugReports: https://github.com/maurolepore/checkout/issues
 Imports: 
-    fs
+    fs,
+    withr
 Suggests: 
     covr,
     magrittr,
