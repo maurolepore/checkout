@@ -13,8 +13,6 @@ test_that("with a path that isn't a repo erorrs gracefully", {
   if (!dir.exists(not_repo)) dir.create(not_repo)
   on.exit(destroy(not_repo), add = TRUE)
 
-  stopifnot(dir.exists(not_repo))
-
   expect_error(walk_git(not_repo, "status"), "not a git repository")
 })
 
@@ -22,7 +20,6 @@ test_that("is sensitive to stop_on_error", {
   not_repo <- tempdir()
   if (!dir.exists(not_repo)) dir.create(not_repo)
   on.exit(destroy(not_repo), add = TRUE)
-  stopifnot(dir.exists(not_repo))
 
   expect_no_error(walk_git(not_repo, "status", stop_on_error = FALSE))
 })
