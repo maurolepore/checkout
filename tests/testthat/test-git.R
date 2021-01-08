@@ -54,3 +54,15 @@ test_that("is sensitive to verbose", {
   expect_true(length(x) > 0L)
   expect_true(length(y) == 0L)
 })
+
+test_that("git() is sensitive to verbose", {
+  repo <- setup_repo(temp_dir())
+  on.exit(destroy(repo))
+
+  x <- capture.output(git(repo, "status", verbose = TRUE))
+  y <- capture.output(git(repo, "status", verbose = FALSE))
+
+  expect_false(identical(x, y))
+  expect_true(length(x) > 0L)
+  expect_true(length(y) == 0L)
+})
