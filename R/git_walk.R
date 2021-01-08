@@ -48,6 +48,20 @@
 #'
 #' # Cleanup
 #' walk(repos, unlink, recursive = TRUE)
+git <- function(path, command, stop_on_error = TRUE, ...) {
+  out <- suppressWarnings(
+    system(git_command(path, command), intern = TRUE, ...)
+  )
+
+  if (stop_on_error && did_throw_error(out)) {
+    stop(out, call. = FALSE)
+  }
+
+  out
+}
+
+#' @export
+#' @rdname git
 git_walk <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) {
   if (verbose) {
     print(
@@ -69,18 +83,6 @@ git_map <- function(path, command, stop_on_error = TRUE, ...) {
   )
 
   out <- stats::setNames(out, path)
-  out
-}
-
-git <- function(path, command, stop_on_error = TRUE, ...) {
-  out <- suppressWarnings(
-    system(git_command(path, command), intern = TRUE, ...)
-  )
-
-  if (stop_on_error && did_throw_error(out)) {
-    stop(out, call. = FALSE)
-  }
-
   out
 }
 
