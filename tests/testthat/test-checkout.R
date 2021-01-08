@@ -51,9 +51,11 @@ test_that("stays at the branch of repo if it's the wd", {
   oldwd <- getwd()
   setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
+
+  out <- git(repo, "checkout pr")
   checkout(repo)
 
-  out <- system("git branch", intern = TRUE)
+  out <- unname(unlist(git_chr(repo, "branch")))
   expect_equal(out, c("  main", "* pr"))
 })
 
