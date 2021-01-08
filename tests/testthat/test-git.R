@@ -65,4 +65,6 @@ test_that("git() is sensitive to verbose", {
   expect_false(identical(x, y))
   expect_true(length(x) > 0L)
   expect_true(length(y) == 0L)
+
+  expect_snapshot_output(git(repo, "status", verbose = TRUE))
 })

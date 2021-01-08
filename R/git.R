@@ -66,13 +66,10 @@ git <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) {
 }
 
 git_walk <- function(path, command, verbose = FALSE, stop_on_error = TRUE, ...) {
-  if (verbose) {
-    print(
-      git_chr(path = path, command = command, stop_on_error = stop_on_error, ...)
-    )
-  } else {
-    git_chr(path = path, command = command, stop_on_error = stop_on_error, ...)
-  }
+  lines <- git_chr(
+    path = path, command = command, stop_on_error = stop_on_error, ...
+  )
+  if (verbose) lapply(lines, writeLines)
 
   invisible(path)
 }
