@@ -27,13 +27,19 @@ walk <- function(x, f, ...) {
 }
 
 # Setup two minimal repositories.
-repos <- file.path(tempdir(), paste0("repo", 1:2))
-repos \%>\%
-  walk(dir.create) \%>\%
-  file.path("a-file.txt") \%>\%
-  walk(file.create) \%>\%
-  walk(function(x) writeLines("Some text", x))
 
+repo1 <- file.path(tempdir(), "repo1")
+if (!dir.exists(repo1)) dir.create(repo1, recursive = TRUE)
+on.exit(unlink(repo1, recursive = TRUE), add = TRUE)
+
+repo2 <- file.path(tempdir(), "repo2")
+if (!dir.exists(repo2)) dir.create(repo2, recursive = TRUE)
+on.exit(unlink(repo2, recursive = TRUE), add = TRUE)
+
+writeLines("Some text", file.path(repo1, "a_file.txt"))
+writeLines("Some text", file.path(repo2, "a_file.txt"))
+
+repos <- c(repo1, repo2)
 repos \%>\%
   git("init --initial-branch=main") \%>\%
   git("config user.name Jerry") \%>\%
@@ -44,7 +50,7 @@ repos \%>\%
 # If we set the directory at `repo1`, it stays at the branch `pr`, whereas the
 # `repo2` changes to the branch `master` (or `main`).
 oldwd <- getwd()
-setwd(repos[[1]])
+setwd(repo1)
 
 repos \%>\% git("checkout -b pr")
 
@@ -55,5 +61,5 @@ repos \%>\% git("branch", verbose = TRUE)
 
 # Cleanup
 setwd(oldwd)
-repos \%>\% walk(unlink, recursive = TRUE)
+
 }
