@@ -49,3 +49,15 @@ test_that("returns invisible path", {
   expect_equal(walk_git(path, "status"), path)
   expect_invisible(walk_git(path, "status"))
 })
+
+test_that("is sensitive to verbose", {
+  repo <- setup_repo(temp_dir())
+  on.exit(destroy(repo))
+
+  x <- capture.output(walk_git(repo, "status", verbose = TRUE))
+  y <- capture.output(walk_git(repo, "status", verbose = FALSE))
+
+  expect_false(identical(x, y))
+  expect_true(length(x) > 0L)
+  expect_true(length(y) == 0L)
+})
