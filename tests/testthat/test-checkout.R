@@ -2,24 +2,20 @@ test_that("with a non-repo errors gracefully", {
   non_repo <- temp_dir()
   on.exit(destroy(non_repo), add = TRUE)
 
-  expect_error(checkout(non_repo), "not.*repo")
+  expect_error(checkout(non_repo), "not a git repo")
 })
 
 test_that("from inside the working directory, checkouts the current branch", {
-  path <- new_repo(temp_dir())
-  on.exit(destroy(path), add = TRUE)
-
-  walk_git(path, "checkout -b pr")
+  repo <- setup_repo(temp_dir())
+  on.exit(destroy(repo), add = TRUE)
 
   oldwd <- getwd()
-  setwd(path)
+  setwd(repo)
   on.exit(setwd(oldwd), add = TRUE)
+  checkout(repo)
+  has_pr_branch <- any(grepl("* pr", git_chr(repo, "branch")))
 
-  checkout(path)
-  has_pr_branch <- any(grepl("* pr", map_git(path, "branch")))
   expect_true(has_pr_branch)
-
-  setwd(oldwd)
 })
 
 test_that("checkouts the master branch of multiple repos", {
@@ -33,14 +29,14 @@ test_that("checkouts the master branch of multiple repos", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    walk_git("init") %>%
-    walk_git("config user.name Jerry") %>%
-    walk_git("config user.email jerry@gmail.com") %>%
-    walk_git("add .") %>%
-    walk_git("commit -m 'New file'")
+    git("init --initial-branch=main") %>%
+    git("config user.name Jerry") %>%
+    git("config user.email jerry@gmail.com") %>%
+    git("add .") %>%
+    git("commit -m 'New file'")
 
   checkout(repos)
-  out <- repos %>% map_git("branch")
+  out <- repos %>% git_chr("branch")
   at_main <- all(grepl("* main", out, fixed = TRUE))
   at_master <- all(grepl("* master", out, fixed = TRUE))
 
@@ -48,50 +44,30 @@ test_that("checkouts the master branch of multiple repos", {
 })
 
 test_that("stays at the branch of repo if it's the wd", {
-  # Setup two minimal repositories.
-  repos <- file.path(tempdir(), paste0("repo", 1:2))
-  repos %>% walk(dir.create)
-  on.exit(destroy(repos[[1]]), add = TRUE)
-  on.exit(destroy(repos[[2]]), add = TRUE)
+  repo <- temp_dir()
+  setup_repo(repo)
+  on.exit(destroy(repo), add = TRUE)
 
-  repos %>%
-    file.path("a-file.txt") %>%
-    walk(file.create)
-  repos %>%
-    walk_git("init") %>%
-    walk_git("config user.name Jerry") %>%
-    walk_git("config user.email jerry@gmail.com") %>%
-    walk_git("add .") %>%
-    walk_git("commit -m 'New file'")
+  git(repo, "checkout pr")
+  withr::with_dir(repo, checkout(repo))
+  out <- unname(unlist(git_chr(repo, "branch")))
 
-  oldwd <- getwd()
-  setwd(repos[[1]])
-  on.exit(setwd(oldwd), add = TRUE)
-
-  repos %>% walk_git("checkout -b pr")
-  checkout(repos)
-  out <- repos %>% map_git("branch")
-
-  at_pr <- any(grepl("* pr", out[[1]], fixed = TRUE))
-  expect_true(at_pr)
-
-  at_main <- any(grepl("* main", out[[2]], fixed = TRUE))
-  at_master <- any(grepl("* master", out[[2]], fixed = TRUE))
-  expect_true(at_main || at_master)
+  expect_equal(out, c("  main", "* pr"))
 })
 
 test_that("with uncommited changes throws an error", {
-  path <- new_repo(temp_dir())
-  on.exit(destroy(path), add = TRUE)
-  writeLines("change but don't commit", file.path(path, "a"))
-  expect_error(checkout(path), "uncommited changes")
+  repo <- setup_repo(temp_dir())
+  on.exit(destroy(repo), add = TRUE)
+  writeLines("change but don't commit", file.path(repo, "a"))
+
+  expect_error(checkout(repo), "uncommited changes")
 })
 
 test_that("returns repos invisibly", {
-  path <- new_repo(temp_dir())
-  on.exit(destroy(path), add = TRUE)
+  repo <- setup_repo(temp_dir())
+  on.exit(destroy(repo), add = TRUE)
 
-  expect_invisible(checkout(path))
+  expect_invisible(checkout(repo))
 })
 
 test_that("does not create two default branches but either main or master", {
@@ -105,17 +81,18 @@ test_that("does not create two default branches but either main or master", {
     file.path("a-file.txt") %>%
     walk(file.create)
   repos %>%
-    walk_git("init") %>%
-    walk_git("config user.name Jerry") %>%
-    walk_git("config user.email jerry@gmail.com") %>%
-    walk_git("add .") %>%
-    walk_git("commit -m 'New file'")
+    git("init --initial-branch=main") %>%
+    git("config user.name Jerry") %>%
+    git("config user.email jerry@gmail.com") %>%
+    git("add .") %>%
+    git("commit -m 'New file'")
 
-  repos %>% map_git("branch")
+  repos %>% git_chr("branch")
   checkout(repos)
-  out <- repos %>% map_git("branch")
+  out <- repos %>% git_chr("branch")
   only_1_default_branch <- all(
     unlist(lapply(out, function(x) length(grepl("main|master", x)) == 1L))
   )
+
   expect_true(only_1_default_branch)
 })

@@ -1,13 +1,38 @@
-new_repo <- function(path) {
-  path <- walk_git(path, "init")
 
-  walk_git(path, "config user.name jerry")
-  walk_git(path, "config user.email jerry@gmail.com")
+setup_one_repo <- function(path) {
+  withr::with_dir(path, {
+    a_file <- file.path(path, "a-file.txt")
+    file.create(a_file)
+    writeLines("Some text", a_file)
 
-  file.create(file.path(path, "a"))
-  walk_git(path, "add .")
-  walk_git(path, "commit -m 'New file'")
+    system("git init --initial-branch=main", intern = TRUE)
 
+    name <- "git config user.name"
+    name_set <- paste0(name, " jerry")
+    name_unset <- git_error(name)
+
+    if (name_unset) system(name_set, intern = TRUE)
+    mail <- "git config user.email"
+    mail_set <- paste0(mail, " jerry@gmail.com")
+    mail_unset <- git_error(name)
+    if (mail_unset) system(mail_set, intern = TRUE)
+
+    system("git add .", intern = TRUE)
+    system("git commit -m 'New file'", intern = TRUE)
+    system("git checkout -b pr", intern = TRUE, ignore.stderr = TRUE)
+
+  })
+
+  invisible(path)
+}
+
+git_error <- function(x) {
+  status <- attributes(system(x, intern = TRUE))$status
+  is.null(status)
+}
+
+setup_repo <- function(path) {
+  lapply(path, setup_one_repo)
   invisible(path)
 }
 
@@ -31,4 +56,3 @@ walk <- function(x, f, ...) {
   lapply(x, f, ...)
   invisible(x)
 }
-

@@ -40,29 +40,30 @@ walk <- function(x, f, ...) {
 }
 ```
 
--   `walk_git()` helps work with multiple Git repositories at once. Here
-    we use it to setup two minimal repositories.
+`git()` helps you work with multiple Git repositories at once. `git()`
+is primarily called for its side effects; here we use it to setup two
+minimal repositories.
 
 ``` r
 repos <- file.path(tempdir(), paste0("repo", 1:2))
 repos %>% walk(dir.create)
 repos %>% file.path("a-file.txt") %>% walk(file.create)
 repos
-#> [1] "/tmp/RtmpK9RbPy/repo1" "/tmp/RtmpK9RbPy/repo2"
+#> [1] "/tmp/RtmpDvZWfO/repo1" "/tmp/RtmpDvZWfO/repo2"
 
 repos %>%
-  walk_git("init") %>%
-  walk_git("config user.name Jerry") %>%
-  walk_git("config user.email jerry@gmail.com") %>%
-  walk_git("add .") %>%
-  walk_git("commit -m 'Add a-file.txt'") %>%
+  git("init --initial-branch=main") %>%
+  git("config user.name Jerry") %>%
+  git("config user.email jerry@gmail.com") %>%
+  git("add .") %>%
+  git("commit -m 'Add a-file.txt'") %>%
   # Each repo now has a commit
-  walk_git("log --oneline -n 1 --decorate", verbose = TRUE)
-#> $`/tmp/RtmpK9RbPy/repo1`
-#> [1] "9767b8f (HEAD -> main) Add a-file.txt"
+  git("log --oneline -n 1 --decorate", verbose = TRUE)
+#> /tmp/RtmpDvZWfO/repo1
+#> 7e743de (HEAD -> main) Add a-file.txt
 #> 
-#> $`/tmp/RtmpK9RbPy/repo2`
-#> [1] "9767b8f (HEAD -> main) Add a-file.txt"
+#> /tmp/RtmpDvZWfO/repo2
+#> 7e743de (HEAD -> main) Add a-file.txt
 ```
 
 -   `checkout()` is inspired by the `ref` argument of
@@ -75,22 +76,36 @@ repos %>%
 oldwd <- getwd()
 setwd(repos[[1]])
 
-repos %>% walk_git("checkout -b pr")
+repos %>% git("checkout -b pr")
 
 # Compare before and after `checkout()`
-repos %>% walk_git("branch", verbose = TRUE)
-#> $`/tmp/RtmpK9RbPy/repo1`
-#> [1] "  main" "* pr"  
+repos %>% git("branch", verbose = TRUE)
+#> /tmp/RtmpDvZWfO/repo1
+#>   main
+#> * pr
 #> 
-#> $`/tmp/RtmpK9RbPy/repo2`
-#> [1] "  main" "* pr"
+#> /tmp/RtmpDvZWfO/repo2
+#>   main
+#> * pr
 repos %>% checkout()
-repos %>% walk_git("branch", verbose = TRUE)
-#> $`/tmp/RtmpK9RbPy/repo1`
-#> [1] "  main" "* pr"  
 #> 
-#> $`/tmp/RtmpK9RbPy/repo2`
-#> [1] "* main" "  pr"
+#> repo: 
+#>  /tmp/RtmpDvZWfO/repo1
+#> wd: 
+#>  /tmp/RtmpDvZWfO/repo1
+#> 
+#> repo: 
+#>  /tmp/RtmpDvZWfO/repo2
+#> wd: 
+#>  /tmp/RtmpDvZWfO/repo1
+repos %>% git("branch", verbose = TRUE)
+#> /tmp/RtmpDvZWfO/repo1
+#>   main
+#> * pr
+#> 
+#> /tmp/RtmpDvZWfO/repo2
+#> * main
+#>   pr
 
 # Cleanup
 setwd(oldwd)

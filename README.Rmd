@@ -49,8 +49,9 @@ walk <- function(x, f, ...) {
 }
 ```
 
-* `walk_git()` helps work with multiple Git repositories at once. Here we use it
-to setup two minimal repositories.
+`git()` helps you work with multiple Git repositories at once. `git()` is
+primarily called for its side effects; here we use it to setup two minimal
+repositories.
 
 ```{r}
 repos <- file.path(tempdir(), paste0("repo", 1:2))
@@ -59,13 +60,13 @@ repos %>% file.path("a-file.txt") %>% walk(file.create)
 repos
 
 repos %>%
-  walk_git("init") %>%
-  walk_git("config user.name Jerry") %>%
-  walk_git("config user.email jerry@gmail.com") %>%
-  walk_git("add .") %>%
-  walk_git("commit -m 'Add a-file.txt'") %>%
+  git("init --initial-branch=main") %>%
+  git("config user.name Jerry") %>%
+  git("config user.email jerry@gmail.com") %>%
+  git("add .") %>%
+  git("commit -m 'Add a-file.txt'") %>%
   # Each repo now has a commit
-  walk_git("log --oneline -n 1 --decorate", verbose = TRUE)
+  git("log --oneline -n 1 --decorate", verbose = TRUE)
 ```
 
 * `checkout()` is inspired by the `ref` argument of
@@ -77,12 +78,12 @@ whereas the `repo2` changes to the branch `master` (or `main`).
 oldwd <- getwd()
 setwd(repos[[1]])
 
-repos %>% walk_git("checkout -b pr")
+repos %>% git("checkout -b pr")
 
 # Compare before and after `checkout()`
-repos %>% walk_git("branch", verbose = TRUE)
+repos %>% git("branch", verbose = TRUE)
 repos %>% checkout()
-repos %>% walk_git("branch", verbose = TRUE)
+repos %>% git("branch", verbose = TRUE)
 
 # Cleanup
 setwd(oldwd)

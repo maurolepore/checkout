@@ -7,3 +7,6 @@
 ^docs$
 ^pkgdown$
 ^codecov\.yml$
+^vignettes/articles$
+^use-case\.Rmd$
+^use-case\.md$
