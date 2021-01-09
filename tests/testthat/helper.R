@@ -1,9 +1,13 @@
 
 setup_one_repo <- function(path) {
+  oldname <- system("git config user.name", intern = TRUE)
+  oldmail <- system("git config user.email", intern = TRUE)
+
   withr::with_dir(path, {
     a_file <- file.path(path, "a-file.txt")
     file.create(a_file)
     writeLines("Some text", a_file)
+
 
     system("git init --initial-branch=main", intern = TRUE)
 
@@ -22,6 +26,9 @@ setup_one_repo <- function(path) {
     system("git checkout -b pr", intern = TRUE, ignore.stderr = TRUE)
 
   })
+
+  system(sprintf("git config user.name %s", oldname), intern = TRUE)
+  system(sprintf("git config user.email %s", oldmail), intern = TRUE)
 
   invisible(path)
 }
