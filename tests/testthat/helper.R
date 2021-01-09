@@ -27,8 +27,8 @@ setup_one_repo <- function(path) {
 
   })
 
-  system(sprintf("git config user.name %s", oldname), intern = TRUE)
-  system(sprintf("git config user.email %s", oldmail), intern = TRUE)
+  system(sprintf("git config user.name '%s'", oldname), intern = TRUE)
+  system(sprintf("git config user.email '%s'", oldmail), intern = TRUE)
 
   invisible(path)
 }
